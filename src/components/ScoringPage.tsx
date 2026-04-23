@@ -248,7 +248,7 @@ export function ScoringPage() {
 
       {/* Scorecard */}
       <div className={styles.scorecard}>
-        {/* Two-column: hole info left, wheel right */}
+        {/* Three-column: hole info | result | wheel */}
         <div className={styles.cardBody}>
           <div className={styles.holeInfo}>
             <div className={styles.holeNumber}>Hole {currentHole}</div>
@@ -257,6 +257,20 @@ export function ScoringPage() {
               <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
             )}
             {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
+          </div>
+
+          <div className={styles.resultCol}>
+            {hasBeenSaved || hasPendingEdit ? (
+              <>
+                <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
+                <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} pts</span>
+                {saving ? <span className={styles.saveIndicator}>saving...</span>
+                  : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
+                  : <span className={styles.saveIndicator}>✓</span>}
+              </>
+            ) : (
+              <span className={styles.ghostHint}>Drag to score</span>
+            )}
           </div>
 
           <ScoreWheel
@@ -270,22 +284,6 @@ export function ScoringPage() {
             pending={hasPendingEdit}
             saving={saving}
           />
-        </div>
-
-        {/* Result + status */}
-        <div className={styles.resultLine}>
-          {hasBeenSaved || hasPendingEdit ? (
-            <>
-              <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
-              <span className={styles.resultArrow}>⇒</span>
-              <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} pts</span>
-              {saving ? <span className={styles.saveIndicator}>saving...</span>
-                : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
-                : <span className={styles.saveIndicator}>✓</span>}
-            </>
-          ) : (
-            <span className={styles.ghostHint}>Drag or tap to set score</span>
-          )}
         </div>
 
         {/* Gap warnings */}
@@ -404,7 +402,7 @@ function ScoreWheel({ value, onChange, ghost, pending, saving }: {
     if (!isDragging.current) return
     e.preventDefault()
     e.stopPropagation()
-    const dy = dragStartY.current - e.touches[0].clientY
+    const dy = e.touches[0].clientY - dragStartY.current
     const delta = Math.round(dy / ITEM_H)
     const newVal = Math.min(MAX, Math.max(MIN, dragStartVal.current + delta))
     if (newVal !== value) onChange(newVal)
@@ -421,7 +419,7 @@ function ScoreWheel({ value, onChange, ghost, pending, saving }: {
     dragStartVal.current = value
     const onMove = (ev: MouseEvent) => {
       if (!isDragging.current) return
-      const dy = dragStartY.current - ev.clientY
+      const dy = ev.clientY - dragStartY.current
       const delta = Math.round(dy / ITEM_H)
       const newVal = Math.min(MAX, Math.max(MIN, dragStartVal.current + delta))
       if (newVal !== value) onChange(newVal)

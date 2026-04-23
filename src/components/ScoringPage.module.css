@@ -204,7 +204,7 @@
 }
 
 .holeNumber {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -300,25 +300,25 @@
   cursor: pointer;
 }
 
-/* Result line */
-.resultLine {
+/* Result column (middle) */
+.resultCol {
+  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 18px;
-  color: var(--text-secondary);
+  gap: 2px;
+  text-align: center;
 }
 
 .resultName {
+  font-size: 18px;
   font-weight: 600;
-}
-
-.resultArrow {
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .resultPts {
+  font-size: 18px;
   font-weight: 700;
 }
 
