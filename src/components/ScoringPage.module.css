@@ -30,7 +30,7 @@
 }
 
 .scoreboardValue {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1;
@@ -38,7 +38,7 @@
 }
 
 .scoreboardTeam .scoreboardValue {
-  font-size: 44px;
+  font-size: 36px;
   color: var(--accent-gold);
 }
 
@@ -89,8 +89,8 @@
 }
 
 .holeDot {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   font-size: 10px;
   font-weight: 600;
@@ -196,12 +196,12 @@
 }
 
 .scoreBtn {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: var(--bg-elevated);
   border: 2px solid var(--border-light);
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 300;
   color: var(--text-primary);
   display: flex;
@@ -222,7 +222,7 @@
 }
 
 .scoreValue {
-  font-size: 52px;
+  font-size: 44px;
   font-weight: 700;
   min-width: 70px;
   text-align: center;
