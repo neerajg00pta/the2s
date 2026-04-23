@@ -253,15 +253,17 @@ export function ScoringPage() {
           {/* Left: hole info */}
           <div className={styles.colLeft}>
             <div className={styles.holeNav}>
-              {currentHole > 1 && <button className={styles.holeArrow} onClick={() => navigate(-1)}>◀</button>}
+              <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
               <span className={styles.holeNumber}>Hole {currentHole}</span>
-              {currentHole < 18 && <button className={styles.holeArrow} onClick={() => navigate(1)}>▶</button>}
+              <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
             </div>
             <div className={styles.holePar}>Par {hole.par}</div>
-            {strokesOnHole > 0 && (
-              <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
-            )}
-            {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
+            <div className={styles.badges}>
+              {strokesOnHole > 0 && (
+                <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
+              )}
+              {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
+            </div>
           </div>
 
           {/* Middle: result */}
@@ -269,7 +271,8 @@ export function ScoringPage() {
             {hasBeenSaved || hasPendingEdit ? (
               <>
                 <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
-                <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} pts</span>
+                <span className={`${styles.resultNum} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints}</span>
+                <span className={styles.resultPtsLabel}>pts</span>
                 {saving ? <span className={styles.saveIndicator}>saving...</span>
                   : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
                   : <span className={styles.saveIndicator}>✓</span>}
