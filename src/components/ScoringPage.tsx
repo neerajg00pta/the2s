@@ -376,7 +376,6 @@ export function ScoringPage() {
 }
 
 function LoginPage() {
-  const { config } = useData()
   const { login } = useAuth()
   const { addToast } = useToast()
   const [email, setEmail] = useState('')
@@ -398,7 +397,6 @@ function LoginPage() {
   return (
     <div className={styles.loginPage}>
       <img src={`${import.meta.env.BASE_URL}favicon.png`} alt="" className={styles.loginIcon} />
-      <h1 className={styles.loginTitle}>Welcome to {config.tournamentName || "The 2's"}</h1>
       <form onSubmit={handleSubmit} className={styles.loginForm}>
         <input
           type="email"
