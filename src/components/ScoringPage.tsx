@@ -49,11 +49,6 @@ export function ScoringPage() {
     return getPlayerTotals(activePlayer, scores, holes, config.doubleHole)
   }, [activePlayer, scores, holes, config.doubleHole])
 
-  const teammateTotals = useMemo(() => {
-    if (!teammate) return null
-    return getPlayerTotals(teammate, scores, holes, config.doubleHole)
-  }, [teammate, scores, holes, config.doubleHole])
-
   // Team leaderboard (source of truth for team totals)
   const teamRows = useMemo(
     () => buildTeamLeaderboard(teams, users, scores, holes, config.doubleHole),
@@ -276,7 +271,7 @@ export function ScoringPage() {
             {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
           </div>
 
-          {/* Score picker: vertical scroll-style */}
+          {/* Score picker: 2 above, current, 1 below */}
           <div className={styles.picker}>
             <button
               className={styles.pickerNum}
@@ -301,11 +296,6 @@ export function ScoringPage() {
               onClick={() => changeScore(-1)}
               disabled={displayScore <= 1 || saving}
             >{displayScore - 1}</button>
-            <button
-              className={styles.pickerNum}
-              onClick={() => changeScore(-2)}
-              disabled={displayScore <= 2 || saving}
-            >{Math.max(1, displayScore - 2)}</button>
           </div>
         </div>
 
@@ -329,17 +319,6 @@ export function ScoringPage() {
             <button className={styles.clearBtn} onClick={clearScore} disabled={saving}>Clear Score</button>
           </div>
         )}
-
-        {/* Teammate on this hole */}
-        {teammate && teammateTotals && (() => {
-          const td = teammateTotals.holeDetails.find(d => d.holeNumber === currentHole)
-          return (
-            <div className={styles.teammateRow}>
-              <span>{teammate.name}</span>
-              <span>{td?.grossScore !== null && td?.grossScore !== undefined ? `${td.grossScore} (${td.points} pts)` : '—'}</span>
-            </div>
-          )
-        })()}
 
         {/* Nav arrows */}
         <div className={styles.navArrows}>
