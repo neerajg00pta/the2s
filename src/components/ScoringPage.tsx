@@ -275,28 +275,18 @@ export function ScoringPage() {
             <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>+</button>
           </div>
 
-          <div className={styles.netCol}>
+          <div className={styles.resultCol}>
             {hasBeenSaved || hasPendingEdit ? (
-              <>
-                <span className={styles.netLabel}>Net</span>
-                <span className={styles.netName}>{netScoreWord(liveNetScore)}</span>
-              </>
+              <span className={styles.resultText}>
+                Net <strong>{netScoreWord(liveNetScore)}</strong>
+                {' ⇒ '}
+                <span className={livePoints > 0 ? styles.pointsPositive : ''}>{livePoints} pts</span>
+                {saving ? <span className={styles.saveIndicator}> saving</span>
+                  : hasPendingEdit ? <span className={styles.saveIndicator}> ...</span>
+                  : <span className={styles.saveCheck}> ✓</span>}
+              </span>
             ) : (
               <span className={styles.ghostHint}>Tap +/−</span>
-            )}
-          </div>
-
-          <div className={styles.ptsCol}>
-            {(hasBeenSaved || hasPendingEdit) && (
-              <div className={styles.ptsInline}>
-                <span className={`${styles.ptsNum} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints}</span>
-                <span className={styles.ptsSuffix}>
-                  <span className={styles.ptsLabel}>pts</span>
-                  {saving ? <span className={styles.saveIndicator}>saving</span>
-                    : hasPendingEdit ? <span className={styles.saveIndicator}>...</span>
-                    : <span className={styles.saveCheck}>✓</span>}
-                </span>
-              </div>
             )}
           </div>
         </div>
