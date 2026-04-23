@@ -28,8 +28,6 @@ export function ScoringPage() {
   // Local score state: tracks pending edits before they're saved
   const [localScores, setLocalScores] = useState<Map<string, number>>(new Map())
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const touchStartX = useRef(0)
-  const touchStartY = useRef(0)
 
   const activePlayer = useMemo(() => {
     if (isAdmin && selectedPlayerId) {
@@ -202,18 +200,6 @@ export function ScoringPage() {
     if (next >= 1 && next <= 18) flushAndNavigate(next)
   }
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-    touchStartY.current = e.touches[0].clientY
-  }
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    const dy = e.changedTouches[0].clientY - touchStartY.current
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      if (dx > 0) navigate(-1)
-      else navigate(1)
-    }
-  }
 
   if (!currentUser) {
     return <LoginPage />
@@ -266,20 +252,7 @@ export function ScoringPage() {
       )}
 
       {/* Scorecard */}
-      <div className={styles.scorecard} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        {/* Hole dots */}
-        <div className={styles.holeDots}>
-          {sortedHoles.map(h => (
-            <button
-              key={h.number}
-              className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
-              onClick={() => flushAndNavigate(h.number)}
-            >
-              {h.number}
-            </button>
-          ))}
-        </div>
-
+      <div className={styles.scorecard}>
         {/* Gap warnings */}
         {gapWarnings && (
           <div className={styles.gapWarning}>
@@ -292,32 +265,48 @@ export function ScoringPage() {
           </div>
         )}
 
-        {/* Hole header */}
-        <div className={styles.holeHeader}>
-          <div className={styles.holeNumber}>Hole {currentHole}</div>
-          <div className={styles.holeMeta}>
-            <span className={styles.parBadge}>Par {hole.par}</span>
+        {/* Two-column layout: hole info left, score picker right */}
+        <div className={styles.cardBody}>
+          <div className={styles.holeInfo}>
+            <div className={styles.holeNumber}>Hole {currentHole}</div>
+            <div className={styles.holePar}>Par {hole.par}</div>
             {strokesOnHole > 0 && (
               <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
             )}
             {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
           </div>
-        </div>
 
-        {/* Score input */}
-        <div className={styles.scoreInput}>
-          <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>
-            &minus;
-          </button>
-          <div
-            className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
-            onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
-          >
-            {displayScore}
+          {/* Score picker: vertical scroll-style */}
+          <div className={styles.picker}>
+            <button
+              className={styles.pickerNum}
+              onClick={() => changeScore(2)}
+              disabled={displayScore >= 14 || saving}
+            >{displayScore + 2}</button>
+            <button
+              className={styles.pickerNum}
+              onClick={() => changeScore(1)}
+              disabled={displayScore >= 15 || saving}
+            >{displayScore + 1}</button>
+            <div className={styles.pickerDivider} />
+            <div
+              className={`${styles.pickerCurrent} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
+              onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
+            >
+              {displayScore}
+            </div>
+            <div className={styles.pickerDivider} />
+            <button
+              className={styles.pickerNum}
+              onClick={() => changeScore(-1)}
+              disabled={displayScore <= 1 || saving}
+            >{displayScore - 1}</button>
+            <button
+              className={styles.pickerNum}
+              onClick={() => changeScore(-2)}
+              disabled={displayScore <= 2 || saving}
+            >{Math.max(1, displayScore - 2)}</button>
           </div>
-          <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>
-            +
-          </button>
         </div>
 
         {/* Result line */}
@@ -360,6 +349,19 @@ export function ScoringPage() {
           <button className={styles.navBtn} onClick={() => navigate(1)} disabled={currentHole >= 18}>
             {currentHole + 1} →
           </button>
+        </div>
+
+        {/* Hole picker */}
+        <div className={styles.holeDots}>
+          {sortedHoles.map(h => (
+            <button
+              key={h.number}
+              className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
+              onClick={() => flushAndNavigate(h.number)}
+            >
+              {h.number}
+            </button>
+          ))}
         </div>
       </div>
 

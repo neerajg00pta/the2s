@@ -188,28 +188,30 @@
   line-height: 1.5;
 }
 
-/* Hole header */
-.holeHeader {
-  text-align: center;
-  padding: 4px 0;
+/* ── Card body: two columns ── */
+.cardBody {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.holeInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .holeNumber {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.holeMeta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 2px;
-}
-
-.parBadge {
-  font-size: 14px;
+.holePar {
+  font-size: 16px;
   color: var(--text-secondary);
   font-weight: 500;
 }
@@ -243,47 +245,50 @@
   50% { box-shadow: 0 0 0 6px rgba(255, 215, 0, 0); }
 }
 
-/* Score input */
-.scoreInput {
+/* ── Score picker (vertical scroll style) ── */
+.picker {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 8px 0;
+  gap: 2px;
+  width: 80px;
+  flex-shrink: 0;
 }
 
-.scoreBtn {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--bg-elevated);
-  border: 2px solid var(--border-light);
-  font-size: 28px;
-  font-weight: 300;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
+.pickerNum {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-muted);
+  opacity: 0.5;
+  padding: 4px 0;
+  width: 100%;
+  text-align: center;
+  transition: all 0.1s;
   -webkit-tap-highlight-color: transparent;
 }
 
-.scoreBtn:active:not(:disabled) {
-  background: var(--accent-green);
-  border-color: var(--accent-green);
-  transform: scale(0.95);
-}
-
-.scoreBtn:disabled {
-  opacity: 0.3;
-}
-
-.scoreValue {
-  font-size: 56px;
-  font-weight: 700;
-  min-width: 70px;
-  text-align: center;
+.pickerNum:active:not(:disabled) {
+  opacity: 1;
   color: var(--text-primary);
+}
+
+.pickerNum:disabled {
+  opacity: 0.15;
+}
+
+.pickerDivider {
+  width: 60px;
+  height: 1px;
+  background: var(--border-light);
+}
+
+.pickerCurrent {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1;
+  padding: 6px 0;
   transition: opacity 0.15s;
 }
 
