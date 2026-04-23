@@ -58,7 +58,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <>
       <header className={styles.header}>
         <Link to="/" className={styles.brand}>
-          <span className={styles.brandIcon}>⛳</span>
+          <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className={styles.brandIcon} />
           <span className={styles.brandText}>{config.tournamentName || 'The 2s'}</span>
         </Link>
 

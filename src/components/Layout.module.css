@@ -44,7 +44,9 @@
 }
 
 .brandIcon {
-  font-size: 20px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
 }
 
 .brandText {
