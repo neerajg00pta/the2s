@@ -216,12 +216,7 @@ export function ScoringPage() {
   }
 
   if (!currentUser) {
-    return (
-      <div className={styles.loginPrompt}>
-        <h2>Welcome to {config.tournamentName || 'The 2s'}</h2>
-        <p>Enter your email above to sign in</p>
-      </div>
-    )
+    return <LoginPage />
   }
 
   if (!hole) {
@@ -376,6 +371,45 @@ export function ScoringPage() {
 
       {/* Graph below leaderboards */}
       <ProgressGraph />
+    </div>
+  )
+}
+
+function LoginPage() {
+  const { config } = useData()
+  const { login } = useAuth()
+  const { addToast } = useToast()
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const trimmed = email.trim().toLowerCase()
+    if (!trimmed) return
+    if (login(trimmed)) {
+      addToast('Welcome!', 'success')
+    } else {
+      setError(true)
+      setTimeout(() => setError(false), 2000)
+      setEmail('')
+    }
+  }
+
+  return (
+    <div className={styles.loginPage}>
+      <img src={`${import.meta.env.BASE_URL}favicon.png`} alt="" className={styles.loginIcon} />
+      <h1 className={styles.loginTitle}>Welcome to {config.tournamentName || "The 2's"}</h1>
+      <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <input
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          className={`${styles.loginInput} ${error ? styles.loginInputError : ''}`}
+        />
+        <button type="submit" className={styles.loginBtn}>Go</button>
+      </form>
+      {error && <p className={styles.loginError}>Email not found</p>}
     </div>
   )
 }

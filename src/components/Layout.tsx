@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useData } from '../contexts/DataContext'
@@ -6,11 +6,9 @@ import { useToast } from '../contexts/ToastContext'
 import styles from './Layout.module.css'
 
 export function Layout({ children }: { children: ReactNode }) {
-  const { currentUser, login, logout, isAdmin, activateAdmin, deactivateAdmin } = useAuth()
+  const { currentUser, logout, isAdmin, activateAdmin, deactivateAdmin } = useAuth()
   const { loading, config } = useData()
   const { addToast } = useToast()
-  const [emailInput, setEmailInput] = useState('')
-  const [loginError, setLoginError] = useState(false)
   const location = useLocation()
 
   // Hidden admin activation: type "admin" anywhere, or long-press name
@@ -29,16 +27,6 @@ export function Layout({ children }: { children: ReactNode }) {
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [activateAdmin, addToast])
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    const trimmed = emailInput.trim().toLowerCase()
-    if (!login(trimmed)) {
-      setLoginError(true)
-      setTimeout(() => setLoginError(false), 2000)
-    }
-    setEmailInput('')
-  }
 
   if (loading) {
     return (
@@ -72,16 +60,7 @@ export function Layout({ children }: { children: ReactNode }) {
               <button onClick={logout} className={styles.logoutBtn}>Log out</button>
             </>
           ) : (
-            <form onSubmit={handleLogin} className={styles.loginForm}>
-              <input
-                type="email"
-                value={emailInput}
-                onChange={e => setEmailInput(e.target.value)}
-                placeholder="Email"
-                className={`${styles.codeInput} ${loginError ? styles.codeInputError : ''}`}
-              />
-              <button type="submit" className={styles.goBtn}>Go</button>
-            </form>
+            null
           )}
         </div>
       </header>
