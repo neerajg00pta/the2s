@@ -99,10 +99,17 @@
   flex: 1;
   min-width: 18px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1px 0;
+}
+
+.gridPopCell {
+  flex: 1;
+  min-width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10px;
 }
 
 .gridScore {
@@ -114,7 +121,6 @@
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
-  margin: 3px 0 1px;
 }
 
 .gridPops {

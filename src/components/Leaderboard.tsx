@@ -170,16 +170,34 @@ function ScorecardGrid({ players }: { players: GridPlayer[] }) {
           <div key={h} className={styles.gridHoleNum}>{h}</div>
         ))}
       </div>
-      {/* Player rows */}
+      {/* Player score rows + pop dot rows */}
       {players.map(p => {
         const sorted = [...p.details].sort((a, b) => a.holeNumber - b.holeNumber)
+        const hasPops = sorted.some(d => d.strokesReceived > 0)
         return (
-          <div key={p.label + p.name} className={styles.gridRow}>
-            <div className={styles.gridLabel}>{p.label}</div>
-            {holes.map(h => {
-              const d = sorted.find(x => x.holeNumber === h)
-              return <ScoreCell key={h} d={d} />
-            })}
+          <div key={p.label + p.name}>
+            <div className={styles.gridRow}>
+              <div className={styles.gridLabel}>{p.label}</div>
+              {holes.map(h => {
+                const d = sorted.find(x => x.holeNumber === h)
+                return <ScoreCell key={h} d={d} />
+              })}
+            </div>
+            {hasPops && (
+              <div className={styles.gridRow}>
+                <div className={styles.gridLabel}></div>
+                {holes.map(h => {
+                  const d = sorted.find(x => x.holeNumber === h)
+                  const hasScore = d?.grossScore !== null && d?.grossScore !== undefined
+                  const strokes = d?.strokesReceived ?? 0
+                  return (
+                    <div key={h} className={styles.gridPopCell}>
+                      {hasScore && strokes > 0 ? <span className={styles.gridPops}>{'●'.repeat(strokes)}</span> : null}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
         )
       })}
@@ -203,9 +221,6 @@ function ScoreCell({ d }: { d: HoleDetail | undefined }) {
   return (
     <div className={cls}>
       <span className={styles.gridScore}>{hasScore ? d.grossScore : '·'}</span>
-      {hasScore && d.strokesReceived > 0 && (
-        <span className={styles.gridPops}>{'●'.repeat(d.strokesReceived)}</span>
-      )}
     </div>
   )
 }
