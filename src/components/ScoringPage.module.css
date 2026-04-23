@@ -127,10 +127,10 @@
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 10px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
@@ -141,8 +141,7 @@
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   gap: 6px;
-  max-width: 360px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .holeDot {
@@ -248,12 +247,11 @@
   font-size: 18px;
   font-weight: 700;
   color: var(--text-secondary);
-  text-transform: uppercase;
 }
 
 .resultPts {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 800;
 }
 
 /* Right column: +/score/- */

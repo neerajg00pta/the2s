@@ -10,11 +10,11 @@ import { ProgressGraph } from './ProgressGraph'
 import styles from './ScoringPage.module.css'
 
 function netScoreName(net: number): string {
-  if (net <= -2) return 'Net Eagle'
-  if (net === -1) return 'Net Birdie'
-  if (net === 0) return 'Net Par'
-  if (net === 1) return 'Net Bogey'
-  return 'Net Double+'
+  if (net <= -2) return 'Net EAGLE'
+  if (net === -1) return 'Net BIRDIE'
+  if (net === 0) return 'Net PAR'
+  if (net === 1) return 'Net BOGEY'
+  return 'Net DOUBLE+'
 }
 
 export function ScoringPage() {
