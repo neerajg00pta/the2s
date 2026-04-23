@@ -82,7 +82,6 @@ export function Layout({ children }: { children: ReactNode }) {
                 onChange={e => setEmailInput(e.target.value)}
                 placeholder="Your email"
                 className={`${styles.codeInput} ${loginError ? styles.codeInputError : ''}`}
-                autoFocus
               />
               <button type="submit" className={styles.goBtn}>Go</button>
               <button type="button" onClick={() => setLoginOpen(false)} className={styles.cancelBtn}>&times;</button>
