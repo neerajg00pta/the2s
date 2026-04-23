@@ -219,7 +219,7 @@ export function ScoringPage() {
     return (
       <div className={styles.loginPrompt}>
         <h2>Welcome to {config.tournamentName || 'The 2s'}</h2>
-        <p>Sign in to enter your scores</p>
+        <p>Enter your email above to sign in</p>
       </div>
     )
   }

@@ -10,7 +10,6 @@ export function Layout({ children }: { children: ReactNode }) {
   const { loading, config } = useData()
   const { addToast } = useToast()
   const [emailInput, setEmailInput] = useState('')
-  const [loginOpen, setLoginOpen] = useState(false)
   const [loginError, setLoginError] = useState(false)
   const location = useLocation()
 
@@ -37,8 +36,6 @@ export function Layout({ children }: { children: ReactNode }) {
     if (!login(trimmed)) {
       setLoginError(true)
       setTimeout(() => setLoginError(false), 2000)
-    } else {
-      setLoginOpen(false)
     }
     setEmailInput('')
   }
@@ -74,20 +71,17 @@ export function Layout({ children }: { children: ReactNode }) {
               >{currentUser.fullName || currentUser.name}</span>
               <button onClick={logout} className={styles.logoutBtn}>Log out</button>
             </>
-          ) : loginOpen ? (
+          ) : (
             <form onSubmit={handleLogin} className={styles.loginForm}>
               <input
                 type="email"
                 value={emailInput}
                 onChange={e => setEmailInput(e.target.value)}
-                placeholder="Your email"
+                placeholder="Email"
                 className={`${styles.codeInput} ${loginError ? styles.codeInputError : ''}`}
               />
               <button type="submit" className={styles.goBtn}>Go</button>
-              <button type="button" onClick={() => setLoginOpen(false)} className={styles.cancelBtn}>&times;</button>
             </form>
-          ) : (
-            <button onClick={() => setLoginOpen(true)} className={styles.signInBtn}>Sign in</button>
           )}
         </div>
       </header>
