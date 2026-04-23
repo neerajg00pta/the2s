@@ -9,12 +9,12 @@ import { LatestTicker } from './LatestTicker'
 import { ProgressGraph } from './ProgressGraph'
 import styles from './ScoringPage.module.css'
 
-function netScoreName(net: number): string {
-  if (net <= -2) return 'Net EAGLE'
-  if (net === -1) return 'Net BIRDIE'
-  if (net === 0) return 'Net PAR'
-  if (net === 1) return 'Net BOGEY'
-  return 'Net DOUBLE+'
+function netScoreWord(net: number): string {
+  if (net <= -2) return 'EAGLE'
+  if (net === -1) return 'BIRDIE'
+  if (net === 0) return 'PAR'
+  if (net === 1) return 'BOGEY'
+  return 'DOUBLE+'
 }
 
 export function ScoringPage() {
@@ -248,48 +248,54 @@ export function ScoringPage() {
 
       {/* Scorecard */}
       <div className={styles.scorecard}>
-        {/* 3-column layout */}
-        <div className={styles.cardBody}>
-          {/* Left: hole info */}
-          <div className={styles.colLeft}>
-            <div className={styles.holeNav}>
-              <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
-              <span className={styles.holeNumber}>Hole {currentHole}</span>
-              <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
-            </div>
-            <div className={styles.holePar}>Par {hole.par}</div>
-            <div className={styles.badges}>
-              {strokesOnHole > 0 && (
-                <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
-              )}
-              {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
-            </div>
+        {/* Row 1: hole info */}
+        <div className={styles.infoRow}>
+          <div className={styles.holeNav}>
+            <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
+            <span className={styles.holeNumber}>Hole {currentHole}</span>
+            <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
+          </div>
+          <span className={styles.holePar}>Par {hole.par}</span>
+          {strokesOnHole > 0 && (
+            <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
+          )}
+          {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
+        </div>
+
+        {/* Row 2: score | net result | points */}
+        <div className={styles.scoreRow}>
+          <div className={styles.scoreCol}>
+            <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>&minus;</button>
+            <div
+              className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
+              onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
+            >{displayScore}</div>
+            <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>+</button>
           </div>
 
-          {/* Middle: result */}
-          <div className={styles.colMiddle}>
+          <div className={styles.netCol}>
             {hasBeenSaved || hasPendingEdit ? (
               <>
-                <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
-                <span className={`${styles.resultNum} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints}</span>
-                <span className={styles.resultPtsLabel}>pts</span>
-                {saving ? <span className={styles.saveIndicator}>saving...</span>
-                  : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
-                  : <span className={styles.saveIndicator}>✓</span>}
+                <span className={styles.netLabel}>Net</span>
+                <span className={styles.netName}>{netScoreWord(liveNetScore)}</span>
               </>
             ) : (
               <span className={styles.ghostHint}>Tap +/−</span>
             )}
           </div>
 
-          {/* Right: score input */}
-          <div className={styles.colRight}>
-            <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>+</button>
-            <div
-              className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
-              onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
-            >{displayScore}</div>
-            <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>&minus;</button>
+          <div className={styles.ptsCol}>
+            {(hasBeenSaved || hasPendingEdit) && (
+              <>
+                <span className={`${styles.ptsNum} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints}</span>
+                <span className={styles.ptsRow}>
+                  <span className={styles.ptsLabel}>pts</span>
+                  {saving ? <span className={styles.saveIndicator}>saving</span>
+                    : hasPendingEdit ? <span className={styles.saveIndicator}>...</span>
+                    : <span className={styles.saveCheck}>✓</span>}
+                </span>
+              </>
+            )}
           </div>
         </div>
 

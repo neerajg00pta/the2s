@@ -20,13 +20,6 @@
   border-radius: 12px;
 }
 
-.loginTitle {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--accent-gold);
-  text-align: center;
-}
-
 .loginForm {
   display: flex;
   gap: 8px;
@@ -127,16 +120,228 @@
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 14px 20px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
 }
 
-/* Hole dots */
+/* ── Row 1: info bar ── */
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.holeNav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.holeArrow {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 8px 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.holeArrow:active {
+  color: var(--text-primary);
+}
+
+.holeArrowHidden {
+  visibility: hidden;
+}
+
+.holeNumber {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.holePar {
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.popsBadge, .doubleBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+.popsBadge {
+  background: var(--accent-green);
+  color: white;
+}
+
+.doubleBadge {
+  background: var(--accent-gold);
+  color: #000;
+  font-weight: 800;
+}
+
+/* ── Row 2: score | net | points ── */
+.scoreRow {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.scoreCol {
+  flex: 1;
+  flex-basis: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.scoreBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scoreBtn:active:not(:disabled) {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+.scoreBtn:disabled {
+  opacity: 0.3;
+}
+
+.scoreValue {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  min-width: 32px;
+  text-align: center;
+}
+
+.netCol {
+  flex: 1;
+  flex-basis: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.netLabel {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.netName {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.ptsCol {
+  flex: 1;
+  flex-basis: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ptsNum {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ptsRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ptsLabel {
+  font-size: 10px;
+  color: var(--accent-gold-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.saveCheck {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── Shared states ── */
+.scoreSaving { opacity: 0.5; }
+.scorePending { color: var(--accent-gold); }
+.scoreGhost { color: var(--text-muted); opacity: 0.4; cursor: pointer; }
+.pointsPositive { color: var(--accent-gold); }
+
+.saveIndicator {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.ghostHint {
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* ── Gap warning ── */
+.gapWarning {
+  background: rgba(229, 57, 53, 0.12);
+  border: 1px solid var(--accent-danger);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-danger);
+  line-height: 1.5;
+}
+
+.clearRow {
+  display: flex;
+  justify-content: center;
+}
+
+.clearBtn {
+  font-size: 11px;
+  color: var(--accent-danger);
+  padding: 2px 8px;
+  border: 1px solid var(--accent-danger);
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.clearBtn:hover { opacity: 1; }
+.clearBtn:disabled { opacity: 0.3; }
+
+/* ── Hole dots ── */
 .holeDots {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
@@ -174,236 +379,3 @@
   background: var(--accent-green);
   color: white;
 }
-
-/* Gap warning */
-.gapWarning {
-  background: rgba(229, 57, 53, 0.12);
-  border: 1px solid var(--accent-danger);
-  border-radius: var(--radius);
-  padding: 6px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent-danger);
-  line-height: 1.5;
-}
-
-/* ── 3-column card body ── */
-.cardBody {
-  display: flex;
-  align-items: center;
-}
-
-/* Left column: hole info */
-.colLeft {
-  flex: 1;
-  flex-basis: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 3px;
-  min-height: 120px;
-}
-
-.holeNav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-.holeArrow {
-  font-size: 12px;
-  color: var(--text-muted);
-  padding: 6px;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.holeArrow:active {
-  color: var(--text-primary);
-}
-
-.holeArrowHidden {
-  visibility: hidden;
-}
-
-.holeNumber {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-primary);
-  white-space: nowrap;
-}
-
-.holePar {
-  font-size: 15px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.badges {
-  display: flex;
-  gap: 6px;
-  min-height: 30px;
-}
-
-/* Middle column: result */
-.colMiddle {
-  flex: 1;
-  flex-basis: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.resultName {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.resultNum {
-  font-size: 56px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.resultPtsLabel {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* Right column: +/score/- */
-.colRight {
-  flex: 1;
-  flex-basis: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.popsBadge, .doubleBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 4px 0;
-  border-radius: 6px;
-  width: 72px;
-  text-align: center;
-}
-
-.popsBadge {
-  background: var(--accent-green);
-  color: white;
-}
-
-.doubleBadge {
-  background: var(--accent-gold);
-  color: #000;
-  font-weight: 800;
-  animation: pulse-gold 2s infinite;
-}
-
-@keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
-  50% { box-shadow: 0 0 0 6px rgba(255, 215, 0, 0); }
-}
-
-/* ── Score input: +/number/- ── */
-.scoreInput {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.scoreBtn {
-  width: 60px;
-  height: 40px;
-  border-radius: var(--radius);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-light);
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.scoreBtn:active:not(:disabled) {
-  background: var(--accent-green);
-  border-color: var(--accent-green);
-}
-
-.scoreBtn:disabled {
-  opacity: 0.3;
-}
-
-.scoreValue {
-  font-size: 56px;
-  font-weight: 800;
-  color: var(--text-primary);
-  line-height: 1;
-  padding: 4px 0;
-}
-
-.scoreSaving {
-  opacity: 0.5;
-}
-
-.scorePending {
-  color: var(--accent-gold);
-}
-
-.scoreGhost {
-  color: var(--text-muted);
-  opacity: 0.4;
-  cursor: pointer;
-}
-
-
-.pointsPositive {
-  color: var(--accent-gold);
-}
-
-.saveIndicator {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-left: 2px;
-}
-
-.ghostHint {
-  font-size: 13px;
-  color: var(--text-muted);
-  opacity: 0.5;
-}
-
-.clearRow {
-  display: flex;
-  justify-content: center;
-}
-
-.clearBtn {
-  font-size: 11px;
-  color: var(--accent-danger);
-  padding: 2px 8px;
-  border: 1px solid var(--accent-danger);
-  border-radius: 4px;
-  opacity: 0.7;
-}
-
-.clearBtn:hover {
-  opacity: 1;
-}
-
-.clearBtn:disabled {
-  opacity: 0.3;
-}
-
