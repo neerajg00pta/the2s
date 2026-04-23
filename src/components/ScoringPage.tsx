@@ -248,6 +248,46 @@ export function ScoringPage() {
 
       {/* Scorecard */}
       <div className={styles.scorecard}>
+        {/* Two-column: hole info left, wheel right */}
+        <div className={styles.cardBody}>
+          <div className={styles.holeInfo}>
+            <div className={styles.holeNumber}>Hole {currentHole}</div>
+            <div className={styles.holePar}>Par {hole.par}</div>
+            {strokesOnHole > 0 && (
+              <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
+            )}
+            {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
+          </div>
+
+          <ScoreWheel
+            value={displayScore}
+            onChange={(v) => {
+              if (v === displayScore) { lockIn(); return }
+              const delta = v - displayScore
+              changeScore(delta)
+            }}
+            ghost={!hasBeenSaved && !hasPendingEdit}
+            pending={hasPendingEdit}
+            saving={saving}
+          />
+        </div>
+
+        {/* Result + status */}
+        <div className={styles.resultLine}>
+          {hasBeenSaved || hasPendingEdit ? (
+            <>
+              <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
+              <span className={styles.resultArrow}>⇒</span>
+              <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} pts</span>
+              {saving ? <span className={styles.saveIndicator}>saving...</span>
+                : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
+                : <span className={styles.saveIndicator}>✓</span>}
+            </>
+          ) : (
+            <span className={styles.ghostHint}>Drag or tap to set score</span>
+          )}
+        </div>
+
         {/* Gap warnings */}
         {gapWarnings && (
           <div className={styles.gapWarning}>
@@ -260,67 +300,13 @@ export function ScoringPage() {
           </div>
         )}
 
-        {/* Two-column layout: hole info left, score picker right */}
-        <div className={styles.cardBody}>
-          <div className={styles.holeInfo}>
-            <div className={styles.holeNumber}>Hole {currentHole}</div>
-            <div className={styles.holePar}>Par {hole.par}</div>
-            {strokesOnHole > 0 && (
-              <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
-            )}
-            {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
-          </div>
-
-          {/* Score picker: 2 above, current, 1 below */}
-          <div className={styles.picker}>
-            <button
-              className={styles.pickerNum}
-              onClick={() => changeScore(2)}
-              disabled={displayScore >= 14 || saving}
-            >{displayScore + 2}</button>
-            <button
-              className={styles.pickerNum}
-              onClick={() => changeScore(1)}
-              disabled={displayScore >= 15 || saving}
-            >{displayScore + 1}</button>
-            <div className={styles.pickerDivider} />
-            <div
-              className={`${styles.pickerCurrent} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
-              onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
-            >
-              {displayScore}
-            </div>
-            <div className={styles.pickerDivider} />
-            <button
-              className={styles.pickerNum}
-              onClick={() => changeScore(-1)}
-              disabled={displayScore <= 1 || saving}
-            >{displayScore - 1}</button>
-          </div>
-        </div>
-
-        {/* Result line */}
-        <div className={styles.resultLine}>
-          {hasBeenSaved || hasPendingEdit ? (
-            <>
-              <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
-              <span className={styles.resultArrow}>⇒</span>
-              <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} {livePoints === 1 ? 'point' : 'points'}</span>
-              {saving ? <span className={styles.saveIndicator}>saving...</span>
-                : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
-                : <span className={styles.saveIndicator}>✓</span>}
-            </>
-          ) : (
-            <span className={styles.ghostHint}>Tap score to lock in par</span>
-          )}
-        </div>
         {isAdmin && hasBeenSaved && (
           <div className={styles.clearRow}>
-            <button className={styles.clearBtn} onClick={clearScore} disabled={saving}>Clear Score</button>
+            <button className={styles.clearBtn} onClick={clearScore} disabled={saving}>Clear</button>
           </div>
         )}
 
-        {/* Nav arrows */}
+        {/* Nav + hole picker */}
         <div className={styles.navArrows}>
           <button className={styles.navBtn} onClick={() => navigate(-1)} disabled={currentHole <= 1}>
             ← {currentHole - 1}
@@ -329,8 +315,6 @@ export function ScoringPage() {
             {currentHole + 1} →
           </button>
         </div>
-
-        {/* Hole picker */}
         <div className={styles.holeDots}>
           {sortedHoles.map(h => (
             <button
@@ -389,6 +373,89 @@ function LoginPage() {
         <button type="submit" className={styles.loginBtn}>Go</button>
       </form>
       {error && <p className={styles.loginError}>Email not found</p>}
+    </div>
+  )
+}
+
+/** Draggable score wheel */
+function ScoreWheel({ value, onChange, ghost, pending, saving }: {
+  value: number
+  onChange: (v: number) => void
+  ghost: boolean
+  pending: boolean
+  saving: boolean
+}) {
+  const ITEM_H = 44
+  const MIN = 1
+  const MAX = 12
+  const containerRef = useRef<HTMLDivElement>(null)
+  const dragStartY = useRef(0)
+  const dragStartVal = useRef(value)
+  const isDragging = useRef(false)
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    isDragging.current = true
+    dragStartY.current = e.touches[0].clientY
+    dragStartVal.current = value
+    e.stopPropagation()
+  }, [value])
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging.current) return
+    e.preventDefault()
+    e.stopPropagation()
+    const dy = dragStartY.current - e.touches[0].clientY
+    const delta = Math.round(dy / ITEM_H)
+    const newVal = Math.min(MAX, Math.max(MIN, dragStartVal.current + delta))
+    if (newVal !== value) onChange(newVal)
+  }, [value, onChange])
+
+  const onTouchEnd = useCallback(() => {
+    isDragging.current = false
+  }, [])
+
+  // Also handle mouse drag for desktop
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    isDragging.current = true
+    dragStartY.current = e.clientY
+    dragStartVal.current = value
+    const onMove = (ev: MouseEvent) => {
+      if (!isDragging.current) return
+      const dy = dragStartY.current - ev.clientY
+      const delta = Math.round(dy / ITEM_H)
+      const newVal = Math.min(MAX, Math.max(MIN, dragStartVal.current + delta))
+      if (newVal !== value) onChange(newVal)
+    }
+    const onUp = () => {
+      isDragging.current = false
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }, [value, onChange])
+
+  const nums = [value + 2, value + 1, value, value - 1]
+    .filter(n => n >= MIN && n <= MAX)
+
+  return (
+    <div
+      ref={containerRef}
+      className={styles.wheel}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      onMouseDown={onMouseDown}
+    >
+      {nums.map(n => (
+        <div
+          key={n}
+          className={`${styles.wheelItem} ${n === value ? styles.wheelCurrent : styles.wheelOther} ${n === value && ghost ? styles.scoreGhost : ''} ${n === value && pending ? styles.scorePending : ''} ${n === value && saving ? styles.scoreSaving : ''}`}
+          onClick={() => onChange(n)}
+        >
+          {n}
+        </div>
+      ))}
     </div>
   )
 }

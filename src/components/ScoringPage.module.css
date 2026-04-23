@@ -215,27 +215,27 @@
   font-weight: 500;
 }
 
-.popsBadge {
-  display: inline-flex;
-  align-items: center;
-  background: var(--accent-green);
-  color: white;
-  font-weight: 700;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 4px;
-}
-
-.doubleBadge {
+.popsBadge, .doubleBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 4px 0;
+  border-radius: 6px;
+  width: 72px;
+  text-align: center;
+}
+
+.popsBadge {
+  background: var(--accent-green);
+  color: white;
+}
+
+.doubleBadge {
   background: var(--accent-gold);
   color: #000;
   font-weight: 800;
-  font-size: 13px;
-  padding: 1px 7px;
-  border-radius: 4px;
   animation: pulse-gold 2s infinite;
 }
 
@@ -244,51 +244,46 @@
   50% { box-shadow: 0 0 0 6px rgba(255, 215, 0, 0); }
 }
 
-/* ── Score picker (vertical scroll style) ── */
-.picker {
+/* ── Score wheel ── */
+.wheel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
   width: 80px;
   flex-shrink: 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.pickerNum {
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--text-muted);
-  opacity: 0.5;
-  padding: 4px 0;
+.wheel:active {
+  cursor: grabbing;
+}
+
+.wheelItem {
   width: 100%;
   text-align: center;
   transition: all 0.1s;
   -webkit-tap-highlight-color: transparent;
 }
 
-.pickerNum:active:not(:disabled) {
-  opacity: 1;
-  color: var(--text-primary);
-}
-
-.pickerNum:disabled {
-  opacity: 0.15;
-}
-
-.pickerDivider {
-  width: 60px;
-  height: 1px;
-  background: var(--border-light);
-}
-
-.pickerCurrent {
+.wheelCurrent {
   font-size: 48px;
   font-weight: 800;
   color: var(--text-primary);
-  text-align: center;
   line-height: 1;
-  padding: 6px 0;
-  transition: opacity 0.15s;
+  padding: 4px 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.wheelOther {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-muted);
+  opacity: 0.4;
+  padding: 2px 0;
 }
 
 .scoreSaving {
