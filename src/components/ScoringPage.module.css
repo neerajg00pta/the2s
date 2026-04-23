@@ -81,10 +81,11 @@
 
 /* Hole dots */
 .holeDots {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
   gap: 3px;
-  flex-wrap: wrap;
+  max-width: 280px;
+  margin: 0 auto;
 }
 
 .holeDot {
