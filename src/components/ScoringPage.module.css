@@ -191,16 +191,17 @@
 .cardBody {
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
 /* Left column: hole info */
 .colLeft {
   flex: 1;
+  flex-basis: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
+  padding-left: 8px;
 }
 
 .holeNav {
@@ -257,10 +258,13 @@
 
 /* Right column: +/score/- */
 .colRight {
+  flex: 1;
+  flex-basis: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  padding-right: 8px;
 }
 
 .popsBadge, .doubleBadge {
