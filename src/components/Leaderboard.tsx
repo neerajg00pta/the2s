@@ -188,11 +188,12 @@ function ScorecardGrid({ players }: { players: GridPlayer[] }) {
 }
 
 function ScoreCell({ d }: { d: HoleDetail | undefined }) {
-  if (!d || d.grossScore === null) return <div className={styles.gridCell}><span className={styles.gridScore}>·</span></div>
+  if (!d) return <div className={styles.gridCell}><span className={styles.gridScore}>·</span></div>
 
+  const hasScore = d.grossScore !== null
   const net = d.netScore
   let cls = styles.gridCell
-  if (net !== null) {
+  if (hasScore && net !== null) {
     if (net <= -2) cls += ` ${styles.scEagle}`
     else if (net === -1) cls += ` ${styles.scBirdie}`
     else if (net === 1) cls += ` ${styles.scBogey}`
@@ -201,7 +202,10 @@ function ScoreCell({ d }: { d: HoleDetail | undefined }) {
 
   return (
     <div className={cls}>
-      <span className={styles.gridScore}>{d.grossScore}</span>
+      <span className={styles.gridScore}>{hasScore ? d.grossScore : '·'}</span>
+      {d.strokesReceived > 0 && (
+        <span className={styles.gridPops}>{'·'.repeat(d.strokesReceived)}</span>
+      )}
     </div>
   )
 }

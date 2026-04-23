@@ -115,6 +115,14 @@
   color: var(--text-secondary);
 }
 
+.gridPops {
+  font-size: 8px;
+  line-height: 1;
+  color: var(--accent-green-light);
+  letter-spacing: 1px;
+  height: 6px;
+}
+
 /* Eagle: gold circle */
 .scEagle .gridScore {
   border-radius: 50%;
