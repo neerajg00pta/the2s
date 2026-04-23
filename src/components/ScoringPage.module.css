@@ -133,9 +133,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding-bottom: 6px;
+  gap: 8px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
+}
+
+.infoSep {
+  width: 1px;
+  height: 18px;
+  background: var(--border-light);
 }
 
 .holeNav {
@@ -252,12 +258,12 @@
 }
 
 .netLabel {
-  font-size: 13px;
+  font-size: 16px;
   color: var(--text-muted);
 }
 
 .netName {
-  font-size: 17px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--text-primary);
 }
@@ -266,9 +272,14 @@
   flex: 1;
   flex-basis: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.ptsInline {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
 }
 
 .ptsNum {
@@ -277,17 +288,17 @@
   line-height: 1;
 }
 
-.ptsRow {
+.ptsSuffix {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .ptsLabel {
   font-size: 10px;
   color: var(--accent-gold-dim);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .saveCheck {

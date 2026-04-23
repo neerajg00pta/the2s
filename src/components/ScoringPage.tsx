@@ -250,16 +250,18 @@ export function ScoringPage() {
       <div className={styles.scorecard}>
         {/* Row 1: hole info */}
         <div className={styles.infoRow}>
+          <span className={styles.holePar}>Par {hole.par}</span>
+          <div className={styles.infoSep} />
           <div className={styles.holeNav}>
             <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
             <span className={styles.holeNumber}>Hole {currentHole}</span>
             <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
           </div>
-          <span className={styles.holePar}>Par {hole.par}</span>
+          {(isDoubleHole || strokesOnHole > 0) && <div className={styles.infoSep} />}
+          {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
           {strokesOnHole > 0 && (
             <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
           )}
-          {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
         </div>
 
         {/* Row 2: score | net result | points */}
@@ -286,15 +288,15 @@ export function ScoringPage() {
 
           <div className={styles.ptsCol}>
             {(hasBeenSaved || hasPendingEdit) && (
-              <>
+              <div className={styles.ptsInline}>
                 <span className={`${styles.ptsNum} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints}</span>
-                <span className={styles.ptsRow}>
+                <span className={styles.ptsSuffix}>
                   <span className={styles.ptsLabel}>pts</span>
                   {saving ? <span className={styles.saveIndicator}>saving</span>
                     : hasPendingEdit ? <span className={styles.saveIndicator}>...</span>
                     : <span className={styles.saveCheck}>✓</span>}
                 </span>
-              </>
+              </div>
             )}
           </div>
         </div>
