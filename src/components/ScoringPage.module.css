@@ -244,14 +244,15 @@
 }
 
 .resultName {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
 }
 
 .resultPts {
-  font-size: 24px;
+  font-size: 56px;
   font-weight: 800;
+  line-height: 1;
 }
 
 /* Right column: +/score/- */
