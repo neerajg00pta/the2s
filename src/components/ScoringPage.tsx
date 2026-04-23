@@ -248,42 +248,46 @@ export function ScoringPage() {
 
       {/* Scorecard */}
       <div className={styles.scorecard}>
-        {/* Hole info row */}
-        <div className={styles.holeRow}>
-          <div className={styles.holeNumber}>Hole {currentHole}</div>
-          <div className={styles.holePar}>Par {hole.par}</div>
-          <div className={styles.badges}>
+        {/* 3-column layout */}
+        <div className={styles.cardBody}>
+          {/* Left: hole info */}
+          <div className={styles.colLeft}>
+            <div className={styles.holeNav}>
+              {currentHole > 1 && <button className={styles.holeArrow} onClick={() => navigate(-1)}>◀</button>}
+              <span className={styles.holeNumber}>Hole {currentHole}</span>
+              {currentHole < 18 && <button className={styles.holeArrow} onClick={() => navigate(1)}>▶</button>}
+            </div>
+            <div className={styles.holePar}>Par {hole.par}</div>
             {strokesOnHole > 0 && (
               <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
             )}
             {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
           </div>
-        </div>
 
-        {/* Score input: + / number / - */}
-        <div className={styles.scoreInput}>
-          <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>+</button>
-          <div
-            className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
-            onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
-          >{displayScore}</div>
-          <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>&minus;</button>
-        </div>
+          {/* Middle: result */}
+          <div className={styles.colMiddle}>
+            {hasBeenSaved || hasPendingEdit ? (
+              <>
+                <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
+                <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} pts</span>
+                {saving ? <span className={styles.saveIndicator}>saving...</span>
+                  : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
+                  : <span className={styles.saveIndicator}>✓</span>}
+              </>
+            ) : (
+              <span className={styles.ghostHint}>Tap +/−</span>
+            )}
+          </div>
 
-        {/* Result line — centered */}
-        <div className={styles.resultLine}>
-          {hasBeenSaved || hasPendingEdit ? (
-            <>
-              <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
-              <span className={styles.resultArrow}>⇒</span>
-              <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} pts</span>
-              {saving ? <span className={styles.saveIndicator}>saving...</span>
-                : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
-                : <span className={styles.saveIndicator}>✓</span>}
-            </>
-          ) : (
-            <span className={styles.ghostHint}>Tap +/− or tap score for par</span>
-          )}
+          {/* Right: score input */}
+          <div className={styles.colRight}>
+            <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>+</button>
+            <div
+              className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
+              onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
+            >{displayScore}</div>
+            <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>&minus;</button>
+          </div>
         </div>
 
         {/* Gap warnings */}
@@ -304,15 +308,7 @@ export function ScoringPage() {
           </div>
         )}
 
-        {/* Nav + hole picker */}
-        <div className={styles.navArrows}>
-          <button className={styles.navBtn} onClick={() => navigate(-1)} disabled={currentHole <= 1}>
-            ← {currentHole - 1}
-          </button>
-          <button className={styles.navBtn} onClick={() => navigate(1)} disabled={currentHole >= 18}>
-            {currentHole + 1} →
-          </button>
-        </div>
+        {/* Hole picker */}
         <div className={styles.holeDots}>
           {sortedHoles.map(h => (
             <button

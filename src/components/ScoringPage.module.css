@@ -188,13 +188,37 @@
   line-height: 1.5;
 }
 
-/* ── Hole info row ── */
-.holeRow {
+/* ── 3-column card body ── */
+.cardBody {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Left column: hole info */
+.colLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.holeNav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.holeArrow {
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.holeArrow:active {
+  color: var(--text-primary);
 }
 
 .holeNumber {
@@ -204,14 +228,40 @@
 }
 
 .holePar {
-  font-size: 20px;
+  font-size: 16px;
   color: var(--text-secondary);
   font-weight: 500;
 }
 
-.badges {
+/* Middle column: result */
+.colMiddle {
+  flex: 1;
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.resultName {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.resultPts {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Right column: +/score/- */
+.colRight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .popsBadge, .doubleBadge {
@@ -297,29 +347,6 @@
   cursor: pointer;
 }
 
-/* Result line */
-.resultLine {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.resultName {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.resultArrow {
-  font-size: 18px;
-  color: var(--text-muted);
-}
-
-.resultPts {
-  font-size: 20px;
-  font-weight: 700;
-}
 
 .pointsPositive {
   color: var(--accent-gold);
@@ -359,28 +386,3 @@
   opacity: 0.3;
 }
 
-/* Nav arrows */
-.navArrows {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.navBtn {
-  flex: 1;
-  padding: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.navBtn:active:not(:disabled) {
-  background: var(--bg-input);
-}
-
-.navBtn:disabled {
-  opacity: 0.3;
-}
