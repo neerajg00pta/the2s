@@ -248,42 +248,42 @@ export function ScoringPage() {
 
       {/* Scorecard */}
       <div className={styles.scorecard}>
-        {/* Three-column: hole info | result | wheel */}
-        <div className={styles.cardBody}>
-          <div className={styles.holeInfo}>
-            <div className={styles.holeNumber}>Hole {currentHole}</div>
-            <div className={styles.holePar}>Par {hole.par}</div>
+        {/* Hole info row */}
+        <div className={styles.holeRow}>
+          <div className={styles.holeNumber}>Hole {currentHole}</div>
+          <div className={styles.holePar}>Par {hole.par}</div>
+          <div className={styles.badges}>
             {strokesOnHole > 0 && (
               <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
             )}
             {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
           </div>
+        </div>
 
-          <div className={styles.resultCol}>
-            {hasBeenSaved || hasPendingEdit ? (
-              <>
-                <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
-                <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} pts</span>
-                {saving ? <span className={styles.saveIndicator}>saving...</span>
-                  : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
-                  : <span className={styles.saveIndicator}>✓</span>}
-              </>
-            ) : (
-              <span className={styles.ghostHint}>Drag to score</span>
-            )}
-          </div>
+        {/* Score input: + / number / - */}
+        <div className={styles.scoreInput}>
+          <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>+</button>
+          <div
+            className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
+            onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
+          >{displayScore}</div>
+          <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>&minus;</button>
+        </div>
 
-          <ScoreWheel
-            value={displayScore}
-            onChange={(v) => {
-              if (v === displayScore) { lockIn(); return }
-              const delta = v - displayScore
-              changeScore(delta)
-            }}
-            ghost={!hasBeenSaved && !hasPendingEdit}
-            pending={hasPendingEdit}
-            saving={saving}
-          />
+        {/* Result line — centered */}
+        <div className={styles.resultLine}>
+          {hasBeenSaved || hasPendingEdit ? (
+            <>
+              <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
+              <span className={styles.resultArrow}>⇒</span>
+              <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} pts</span>
+              {saving ? <span className={styles.saveIndicator}>saving...</span>
+                : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
+                : <span className={styles.saveIndicator}>✓</span>}
+            </>
+          ) : (
+            <span className={styles.ghostHint}>Tap +/− or tap score for par</span>
+          )}
         </div>
 
         {/* Gap warnings */}
@@ -375,85 +375,3 @@ function LoginPage() {
   )
 }
 
-/** Draggable score wheel */
-function ScoreWheel({ value, onChange, ghost, pending, saving }: {
-  value: number
-  onChange: (v: number) => void
-  ghost: boolean
-  pending: boolean
-  saving: boolean
-}) {
-  const ITEM_H = 44
-  const MIN = 1
-  const MAX = 12
-  const containerRef = useRef<HTMLDivElement>(null)
-  const dragStartY = useRef(0)
-  const dragStartVal = useRef(value)
-  const isDragging = useRef(false)
-
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    isDragging.current = true
-    dragStartY.current = e.touches[0].clientY
-    dragStartVal.current = value
-    e.stopPropagation()
-  }, [value])
-
-  const onTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging.current) return
-    e.preventDefault()
-    e.stopPropagation()
-    const dy = e.touches[0].clientY - dragStartY.current
-    const delta = Math.round(dy / ITEM_H)
-    const newVal = Math.min(MAX, Math.max(MIN, dragStartVal.current + delta))
-    if (newVal !== value) onChange(newVal)
-  }, [value, onChange])
-
-  const onTouchEnd = useCallback(() => {
-    isDragging.current = false
-  }, [])
-
-  // Also handle mouse drag for desktop
-  const onMouseDown = useCallback((e: React.MouseEvent) => {
-    isDragging.current = true
-    dragStartY.current = e.clientY
-    dragStartVal.current = value
-    const onMove = (ev: MouseEvent) => {
-      if (!isDragging.current) return
-      const dy = ev.clientY - dragStartY.current
-      const delta = Math.round(dy / ITEM_H)
-      const newVal = Math.min(MAX, Math.max(MIN, dragStartVal.current + delta))
-      if (newVal !== value) onChange(newVal)
-    }
-    const onUp = () => {
-      isDragging.current = false
-      window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseup', onUp)
-    }
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseup', onUp)
-  }, [value, onChange])
-
-  const nums = [value + 2, value + 1, value, value - 1]
-    .filter(n => n >= MIN && n <= MAX)
-
-  return (
-    <div
-      ref={containerRef}
-      className={styles.wheel}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-      onMouseDown={onMouseDown}
-    >
-      {nums.map(n => (
-        <div
-          key={n}
-          className={`${styles.wheelItem} ${n === value ? styles.wheelCurrent : styles.wheelOther} ${n === value && ghost ? styles.scoreGhost : ''} ${n === value && pending ? styles.scorePending : ''} ${n === value && saving ? styles.scoreSaving : ''}`}
-          onClick={() => onChange(n)}
-        >
-          {n}
-        </div>
-      ))}
-    </div>
-  )
-}
