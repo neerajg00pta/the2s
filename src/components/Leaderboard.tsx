@@ -203,8 +203,8 @@ function ScoreCell({ d }: { d: HoleDetail | undefined }) {
   return (
     <div className={cls}>
       <span className={styles.gridScore}>{hasScore ? d.grossScore : '·'}</span>
-      {d.strokesReceived > 0 && (
-        <span className={styles.gridPops}>{'·'.repeat(d.strokesReceived)}</span>
+      {hasScore && d.strokesReceived > 0 && (
+        <span className={styles.gridPops}>{'●'.repeat(d.strokesReceived)}</span>
       )}
     </div>
   )
