@@ -1,0 +1,286 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.denied {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-muted);
+}
+
+.lockSection {
+  display: flex;
+  justify-content: center;
+}
+
+.lockBtn {
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  background: var(--accent-green);
+  color: white;
+}
+
+.locked {
+  background: var(--accent-danger);
+}
+
+.section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.section h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-gold);
+  margin-bottom: 12px;
+}
+
+/* Teams */
+.teamCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.teamCard:last-of-type {
+  border-bottom: none;
+}
+
+.teamName {
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 100px;
+}
+
+.teamMembers {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.memberChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-elevated);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.unassignBtn {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.unassignBtn:hover {
+  color: var(--accent-danger);
+}
+
+.assignSelect {
+  padding: 4px 6px;
+  font-size: 12px;
+  border: 1px dashed var(--border-light);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.unassigned {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+}
+
+.unassignedLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.unassignedChip {
+  font-size: 13px;
+  background: rgba(229, 57, 53, 0.15);
+  color: var(--accent-danger);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.createTeam {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.select {
+  padding: 8px;
+  font-size: 13px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 100px;
+}
+
+/* Editable player table */
+.tableWrap {
+  overflow-x: auto;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  padding: 6px 4px;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 4px 2px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.cellInput {
+  width: 100%;
+  min-width: 80px;
+  padding: 5px 6px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.cellInput:focus {
+  border-color: var(--accent-green);
+  background: var(--bg-input);
+}
+
+.cellInputSm {
+  composes: cellInput;
+  width: 70px;
+  min-width: 50px;
+}
+
+.cellInputXs {
+  composes: cellInput;
+  width: 48px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.actions {
+  white-space: nowrap;
+}
+
+.linkBtn {
+  font-size: 14px;
+  padding: 2px 4px;
+  opacity: 0.6;
+}
+
+.linkBtn:hover {
+  opacity: 1;
+}
+
+.deleteBtn {
+  font-size: 14px;
+  color: var(--accent-danger);
+  padding: 2px 4px;
+  opacity: 0.6;
+}
+
+.deleteBtn:hover {
+  opacity: 1;
+}
+
+/* Add form */
+.addForm {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.input {
+  flex: 1;
+  min-width: 80px;
+  padding: 8px 8px;
+  font-size: 13px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--accent-green);
+}
+
+.inputSm {
+  composes: input;
+  width: 80px;
+  min-width: 60px;
+  flex: 0;
+}
+
+.inputXs {
+  composes: input;
+  width: 56px;
+  min-width: 48px;
+  flex: 0;
+  text-align: center;
+}
+
+.actionBtn {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--accent-green);
+  color: white;
+  border-radius: var(--radius);
+  white-space: nowrap;
+}
+
+.actionBtn:disabled {
+  opacity: 0.5;
+}

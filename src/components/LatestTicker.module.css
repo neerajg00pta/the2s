@@ -1,0 +1,86 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  overflow: hidden;
+}
+
+.label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.track {
+  flex: 1;
+  overflow-x: auto;
+  mask-image: linear-gradient(to right, transparent, black 8px, black calc(100% - 8px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8px, black calc(100% - 8px), transparent);
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.track:active {
+  cursor: grabbing;
+}
+
+.scroll {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker 20s linear infinite;
+  width: max-content;
+}
+
+.trackDragging .scroll {
+  animation-play-state: paused;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.item {
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.rank {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-right: 2px;
+}
+
+.team {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pts {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.hole {
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.sep {
+  color: var(--border-light);
+  margin: 0 8px;
+  font-weight: 300;
+}

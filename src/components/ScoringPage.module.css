@@ -1,0 +1,341 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.loginPrompt {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-secondary);
+}
+
+.loginPrompt h2 {
+  font-size: 22px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+/* ── Big 3 scoreboard ── */
+.scoreboard {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 16px 0 8px;
+}
+
+.scoreboardItem {
+  text-align: center;
+  flex: 1;
+}
+
+.scoreboardValue {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.scoreboardTeam .scoreboardValue {
+  font-size: 44px;
+  color: var(--accent-gold);
+}
+
+.scoreboardLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ── Admin selector ── */
+.adminSelector {
+  display: flex;
+  justify-content: center;
+}
+
+.playerSelect {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid var(--accent-green);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* ── Scorecard ── */
+.scorecard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Hole dots */
+.holeDots {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.holeDot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  border: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+.holeDotFilled {
+  background: var(--accent-green);
+  color: white;
+}
+
+.holeDotCurrent {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.holeDotCurrent.holeDotFilled {
+  border-color: var(--accent-gold);
+  background: var(--accent-green);
+  color: white;
+}
+
+/* Gap warning */
+.gapWarning {
+  background: rgba(229, 57, 53, 0.12);
+  border: 1px solid var(--accent-danger);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-danger);
+  line-height: 1.5;
+}
+
+/* Hole header */
+.holeHeader {
+  text-align: center;
+  padding: 4px 0;
+}
+
+.holeNumber {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.holeMeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.parBadge {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.popsBadge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--accent-green);
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.doubleBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-gold);
+  color: #000;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 1px 7px;
+  border-radius: 4px;
+  animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 215, 0, 0); }
+}
+
+/* Score input */
+.scoreInput {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 8px 0;
+}
+
+.scoreBtn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border-light);
+  font-size: 30px;
+  font-weight: 300;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scoreBtn:active:not(:disabled) {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  transform: scale(0.95);
+}
+
+.scoreBtn:disabled {
+  opacity: 0.3;
+}
+
+.scoreValue {
+  font-size: 52px;
+  font-weight: 700;
+  min-width: 70px;
+  text-align: center;
+  color: var(--text-primary);
+  transition: opacity 0.15s;
+}
+
+.scoreSaving {
+  opacity: 0.5;
+}
+
+.scorePending {
+  color: var(--accent-gold);
+}
+
+.scoreGhost {
+  color: var(--text-muted);
+  opacity: 0.4;
+  cursor: pointer;
+}
+
+/* Result line */
+.resultLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.resultName {
+  font-weight: 500;
+}
+
+.resultArrow {
+  color: var(--text-muted);
+}
+
+.resultPts {
+  font-weight: 700;
+}
+
+.pointsPositive {
+  color: var(--accent-gold);
+}
+
+.saveIndicator {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.ghostHint {
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.clearRow {
+  display: flex;
+  justify-content: center;
+}
+
+.clearBtn {
+  font-size: 11px;
+  color: var(--accent-danger);
+  padding: 2px 8px;
+  border: 1px solid var(--accent-danger);
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.clearBtn:hover {
+  opacity: 1;
+}
+
+.clearBtn:disabled {
+  opacity: 0.3;
+}
+
+/* Teammate row */
+.teammateRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* Nav arrows */
+.navArrows {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.navBtn {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.navBtn:active:not(:disabled) {
+  background: var(--bg-input);
+}
+
+.navBtn:disabled {
+  opacity: 0.3;
+}

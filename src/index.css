@@ -1,0 +1,74 @@
+:root {
+  --bg-primary: #0a0f0a;
+  --bg-surface: #151f15;
+  --bg-elevated: #1e2e1e;
+  --bg-input: #243024;
+  --text-primary: #e8f0e8;
+  --text-secondary: #8fa88f;
+  --text-muted: #5a7a5a;
+  --accent-green: #2e7d32;
+  --accent-green-light: #43a047;
+  --accent-gold: #ffd700;
+  --accent-gold-dim: #b8960a;
+  --accent-danger: #e53935;
+  --accent-blue: #42a5f5;
+  --border: #2a3a2a;
+  --border-light: #3a4a3a;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --header-height: 52px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+input, button, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+a {
+  color: var(--accent-green-light);
+  text-decoration: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 3px;
+}

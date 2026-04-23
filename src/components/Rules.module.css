@@ -1,0 +1,89 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.section h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.section p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.section p:last-child {
+  margin-bottom: 0;
+}
+
+.section ul {
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.table th {
+  text-align: left;
+  padding: 6px 12px;
+  background: var(--bg-elevated);
+  color: var(--accent-gold);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.table td {
+  padding: 6px 12px;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.dot {
+  color: var(--accent-green-light);
+  font-size: 16px;
+}
+
+.gold {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.formula {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  background: var(--bg-elevated);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  color: var(--accent-green-light);
+}
+
+.small {
+  font-size: 12px;
+  color: var(--text-muted);
+}

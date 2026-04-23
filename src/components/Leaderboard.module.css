@@ -1,0 +1,142 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th {
+  padding: 6px 12px;
+  background: var(--bg-elevated);
+  color: var(--accent-gold);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.thTeam { text-align: left; }
+.thNum { text-align: center; width: 65px; }
+
+.table td {
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+
+.tdTeam { font-weight: 500; white-space: nowrap; }
+.tdNum { text-align: center; font-variant-numeric: tabular-nums; }
+
+.pops {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.myRow { background: rgba(46, 125, 50, 0.15); }
+.myRow td { color: var(--accent-green-light); font-weight: 600; }
+
+.rowOpen { background: var(--bg-elevated); }
+
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 20px 12px;
+  font-style: italic;
+}
+
+/* ── Expanded detail row ── */
+.detailRow td { padding: 0 !important; border-bottom: 2px solid var(--border) !important; }
+
+.detailCell {
+  padding: 6px 4px !important;
+  background: var(--bg-primary);
+}
+
+/* ── Scorecard grid ── */
+.scorecardGrid {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gridRow {
+  display: flex;
+  align-items: center;
+}
+
+.gridLabel {
+  width: 22px;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: right;
+  padding-right: 3px;
+}
+
+.gridHoleNum {
+  flex: 1;
+  min-width: 18px;
+  text-align: center;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.gridCell {
+  flex: 1;
+  min-width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 0;
+}
+
+.gridScore {
+  font-size: 12px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+/* Eagle: gold circle */
+.scEagle .gridScore {
+  border-radius: 50%;
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+/* Birdie: green circle */
+.scBirdie .gridScore {
+  border-radius: 50%;
+  border: 2px solid var(--accent-green-light);
+  color: var(--accent-green-light);
+}
+
+/* Bogey: square border */
+.scBogey .gridScore {
+  border: 2px solid var(--text-secondary);
+}
+
+/* Double bogey+: red square */
+.scDouble .gridScore {
+  border: 2px solid var(--accent-danger);
+  color: var(--accent-danger);
+}

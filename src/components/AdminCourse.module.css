@@ -1,0 +1,119 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.denied {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-muted);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th {
+  padding: 10px 12px;
+  background: var(--bg-elevated);
+  color: var(--accent-gold);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 6px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.holeNum {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.select {
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  width: 56px;
+  text-align: center;
+}
+
+.hcpInput {
+  width: 48px;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.doubleCol {
+  width: 48px;
+}
+
+.doubleBtn {
+  font-size: 20px;
+  padding: 4px 8px;
+  color: var(--text-muted);
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.doubleBtnActive {
+  color: var(--accent-gold);
+  background: rgba(255, 215, 0, 0.15);
+}
+
+.rowSaving {
+  opacity: 0.5;
+}
+
+.empty {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.summary {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+}

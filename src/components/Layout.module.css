@@ -1,0 +1,181 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent-green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Header */
+.header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.brandIcon {
+  font-size: 20px;
+}
+
+.brandText {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: var(--accent-gold);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navLink {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 4px 8px;
+}
+
+.navLinkActive {
+  color: var(--accent-green-light);
+}
+
+.userName {
+  font-size: 13px;
+  color: var(--text-secondary);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.logoutBtn {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+}
+
+.signInBtn {
+  font-size: 13px;
+  color: var(--accent-green-light);
+  padding: 6px 12px;
+  border: 1px solid var(--accent-green);
+  border-radius: var(--radius);
+}
+
+.loginForm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.codeInput {
+  width: 160px;
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.codeInput:focus {
+  border-color: var(--accent-green);
+}
+
+.codeInputError {
+  border-color: var(--accent-danger);
+  animation: flash-red 0.3s;
+}
+
+@keyframes flash-red {
+  0%, 100% { background: var(--bg-input); }
+  50% { background: #3a1515; }
+}
+
+.goBtn {
+  font-size: 13px;
+  padding: 6px 12px;
+  background: var(--accent-green);
+  color: white;
+  border-radius: var(--radius);
+  font-weight: 600;
+}
+
+.cancelBtn {
+  font-size: 18px;
+  color: var(--text-muted);
+  padding: 4px;
+  line-height: 1;
+}
+
+/* Admin bar */
+.adminBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  background: var(--accent-green);
+  font-size: 13px;
+}
+
+.adminLink {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.adminLinkActive {
+  color: white;
+  background: rgba(255,255,255,0.2);
+  font-weight: 600;
+}
+
+.exitAdminBtn {
+  margin-left: auto;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  padding: 2px 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: 12px 12px 32px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
