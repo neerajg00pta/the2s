@@ -2,7 +2,7 @@
   "name": "The 2s",
   "short_name": "The 2s",
   "start_url": "/the2s/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#0a0f0a",
   "theme_color": "#006747",
   "icons": [
