@@ -72,6 +72,10 @@ export function ScoringPage() {
   const hasBeenSaved = dbScore !== null
   const hasPendingEdit = localPending !== undefined
 
+  const scoreSet = useMemo(() => {
+    if (!activePlayer) return new Set<number>()
+    return new Set(scores.filter(s => s.userId === activePlayer.id).map(s => s.holeNumber))
+  }, [activePlayer, scores])
 
   // Compute gap warnings: missing holes before the highest scored hole
   const gapWarnings = useMemo(() => {
@@ -246,27 +250,15 @@ export function ScoringPage() {
       <div className={styles.scorecard}>
         {/* Hole dots */}
         <div className={styles.holeDots}>
-          {sortedHoles.map(h => {
-            const detail = playerTotals?.holeDetails.find(d => d.holeNumber === h.number)
-            const scored = detail?.grossScore !== null && detail?.grossScore !== undefined
-            const net = detail?.netScore ?? null
-            let scoreCls = styles.holeDot
-            if (h.number === currentHole) scoreCls += ` ${styles.holeDotCurrent}`
-            if (scored && net !== null) {
-              if (net <= -2) scoreCls += ` ${styles.dotEagle}`
-              else if (net === -1) scoreCls += ` ${styles.dotBirdie}`
-              else if (net === 0) scoreCls += ` ${styles.dotPar}`
-              else if (net === 1) scoreCls += ` ${styles.dotBogey}`
-              else scoreCls += ` ${styles.dotDouble}`
-            } else if (!scored) {
-              scoreCls += ` ${styles.dotEmpty}`
-            }
-            return (
-              <button key={h.number} className={scoreCls} onClick={() => flushAndNavigate(h.number)}>
-                {scored ? detail!.grossScore : h.number}
-              </button>
-            )
-          })}
+          {sortedHoles.map(h => (
+            <button
+              key={h.number}
+              className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
+              onClick={() => flushAndNavigate(h.number)}
+            >
+              {h.number}
+            </button>
+          ))}
         </div>
 
         {/* Gap warnings */}

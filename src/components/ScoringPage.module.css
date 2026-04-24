@@ -146,61 +146,34 @@
 }
 
 .holeDot {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s;
-  -webkit-tap-highlight-color: transparent;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
   border: 2px solid transparent;
-  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.holeDotFilled {
+  background: var(--accent-green);
+  color: white;
 }
 
 .holeDotCurrent {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: 2px;
-}
-
-/* No score yet */
-.dotEmpty {
-  background: var(--bg-elevated);
-  color: var(--text-muted);
-  border-radius: 50%;
-}
-
-/* Net par (no decoration) */
-.dotPar {
-  color: var(--text-secondary);
-}
-
-/* Eagle: gold circle */
-.dotEagle {
-  border-radius: 50%;
   border-color: var(--accent-gold);
   color: var(--accent-gold);
 }
 
-/* Birdie: green circle */
-.dotBirdie {
-  border-radius: 50%;
-  border-color: var(--accent-green-light);
-  color: var(--accent-green-light);
-}
-
-/* Bogey: square border */
-.dotBogey {
-  border-radius: 2px;
-  border-color: var(--text-secondary);
-}
-
-/* Double+: red square */
-.dotDouble {
-  border-radius: 2px;
-  border-color: var(--accent-danger);
-  color: var(--accent-danger);
+.holeDotCurrent.holeDotFilled {
+  border-color: var(--accent-gold);
+  background: var(--accent-green);
+  color: white;
 }
 
 /* Gap warning */
