@@ -136,12 +136,14 @@
   -webkit-user-select: none;
 }
 
-/* Hole dots */
+/* Hole dots — 2 columns: 1-9 left, 10-18 right */
 .holeDots {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 6px;
-  max-width: 360px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(9, auto);
+  grid-auto-flow: column;
+  gap: 4px 16px;
+  max-width: 180px;
   margin: 0 auto;
 }
 
