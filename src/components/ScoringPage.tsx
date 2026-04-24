@@ -24,6 +24,7 @@ export function ScoringPage() {
   const [currentHole, setCurrentHole] = useState(1)
   const [saving, setSaving] = useState(false)
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null)
+  const [showHolePicker, setShowHolePicker] = useState(false)
 
   // Local score state: tracks pending edits before they're saved
   const [localScores, setLocalScores] = useState<Map<string, number>>(new Map())
@@ -264,7 +265,7 @@ export function ScoringPage() {
         <div className={styles.holeHeader}>
           <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
           <div className={styles.holeMeta}>
-            <span className={styles.holeNumber}>Hole {currentHole}</span>
+            <span className={styles.holeNumber} onClick={() => setShowHolePicker(p => !p)}>Hole {currentHole}</span>
             <span className={styles.parBadge}>Par {hole.par}</span>
             {strokesOnHole > 0 && (
               <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
@@ -312,18 +313,20 @@ export function ScoringPage() {
           </div>
         )}
 
-        {/* Hole picker */}
-        <div className={styles.holeDots}>
-          {sortedHoles.map(h => (
-            <button
-              key={h.number}
-              className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
-              onClick={() => flushAndNavigate(h.number)}
-            >
-              {h.number}
-            </button>
-          ))}
-        </div>
+        {/* Hole picker — toggled by clicking Hole # */}
+        {showHolePicker && (
+          <div className={styles.holeDots}>
+            {sortedHoles.map(h => (
+              <button
+                key={h.number}
+                className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
+                onClick={() => { flushAndNavigate(h.number); setShowHolePicker(false) }}
+              >
+                {h.number}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Latest ticker */}

@@ -142,7 +142,9 @@
   grid-template-columns: repeat(9, 1fr);
   gap: 6px;
   max-width: 360px;
-  margin: 0 auto;
+  margin: 12px auto 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
 
 .holeDot {
@@ -223,6 +225,10 @@
   font-weight: 700;
   color: var(--text-primary);
   white-space: nowrap;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--border-light);
+  text-underline-offset: 3px;
 }
 
 .parBadge {
