@@ -9,12 +9,12 @@ import { LatestTicker } from './LatestTicker'
 import { ProgressGraph } from './ProgressGraph'
 import styles from './ScoringPage.module.css'
 
-function netScoreWord(net: number): string {
-  if (net <= -2) return 'EAGLE'
-  if (net === -1) return 'BIRDIE'
-  if (net === 0) return 'PAR'
-  if (net === 1) return 'BOGEY'
-  return 'DOUBLE+'
+function netScoreName(net: number): string {
+  if (net <= -2) return 'Net Eagle'
+  if (net === -1) return 'Net Birdie'
+  if (net === 0) return 'Net Par'
+  if (net === 1) return 'Net Bogey'
+  return 'Net Double+'
 }
 
 export function ScoringPage() {
@@ -28,6 +28,8 @@ export function ScoringPage() {
   // Local score state: tracks pending edits before they're saved
   const [localScores, setLocalScores] = useState<Map<string, number>>(new Map())
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
 
   const activePlayer = useMemo(() => {
     if (isAdmin && selectedPlayerId) {
@@ -48,6 +50,11 @@ export function ScoringPage() {
     if (!activePlayer) return null
     return getPlayerTotals(activePlayer, scores, holes, config.doubleHole)
   }, [activePlayer, scores, holes, config.doubleHole])
+
+  const teammateTotals = useMemo(() => {
+    if (!teammate) return null
+    return getPlayerTotals(teammate, scores, holes, config.doubleHole)
+  }, [teammate, scores, holes, config.doubleHole])
 
   // Team leaderboard (source of truth for team totals)
   const teamRows = useMemo(
@@ -195,6 +202,18 @@ export function ScoringPage() {
     if (next >= 1 && next <= 18) flushAndNavigate(next)
   }
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    const dy = e.changedTouches[0].clientY - touchStartY.current
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx > 0) navigate(-1)
+      else navigate(1)
+    }
+  }
 
   if (!currentUser) {
     return <LoginPage />
@@ -247,48 +266,18 @@ export function ScoringPage() {
       )}
 
       {/* Scorecard */}
-      <div className={styles.scorecard}>
-        {/* Row 1: hole info */}
-        <div className={styles.infoRow}>
-          <span className={styles.holePar}>Par {hole.par}</span>
-          <div className={styles.infoSep} />
-          <div className={styles.holeNav}>
-            <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
-            <span className={styles.holeNumber}>Hole {currentHole}</span>
-            <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
-          </div>
-          {(isDoubleHole || strokesOnHole > 0) && <div className={styles.infoSep} />}
-          {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
-          {strokesOnHole > 0 && (
-            <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
-          )}
-        </div>
-
-        {/* Row 2: score | net result | points */}
-        <div className={styles.scoreRow}>
-          <div className={styles.scoreCol}>
-            <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>&minus;</button>
-            <div
-              className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
-              onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
-            >{displayScore}</div>
-            <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>+</button>
-          </div>
-
-          <div className={styles.resultCol}>
-            {hasBeenSaved || hasPendingEdit ? (
-              <span className={styles.resultText}>
-                Net <strong>{netScoreWord(liveNetScore)}</strong>
-                {' ⇒ '}
-                <span className={livePoints > 0 ? styles.pointsPositive : ''}>{livePoints} pts</span>
-                {saving ? <span className={styles.saveIndicator}> saving</span>
-                  : hasPendingEdit ? <span className={styles.saveIndicator}> ...</span>
-                  : <span className={styles.saveCheck}> ✓</span>}
-              </span>
-            ) : (
-              <span className={styles.ghostHint}>Tap +/−</span>
-            )}
-          </div>
+      <div className={styles.scorecard} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        {/* Hole dots */}
+        <div className={styles.holeDots}>
+          {sortedHoles.map(h => (
+            <button
+              key={h.number}
+              className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
+              onClick={() => flushAndNavigate(h.number)}
+            >
+              {h.number}
+            </button>
+          ))}
         </div>
 
         {/* Gap warnings */}
@@ -303,23 +292,74 @@ export function ScoringPage() {
           </div>
         )}
 
+        {/* Hole header */}
+        <div className={styles.holeHeader}>
+          <div className={styles.holeNumber}>Hole {currentHole}</div>
+          <div className={styles.holeMeta}>
+            <span className={styles.parBadge}>Par {hole.par}</span>
+            {strokesOnHole > 0 && (
+              <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
+            )}
+            {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
+          </div>
+        </div>
+
+        {/* Score input */}
+        <div className={styles.scoreInput}>
+          <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>
+            &minus;
+          </button>
+          <div
+            className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
+            onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
+          >
+            {displayScore}
+          </div>
+          <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>
+            +
+          </button>
+        </div>
+
+        {/* Result line */}
+        <div className={styles.resultLine}>
+          {hasBeenSaved || hasPendingEdit ? (
+            <>
+              <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
+              <span className={styles.resultArrow}>⇒</span>
+              <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} {livePoints === 1 ? 'point' : 'points'}</span>
+              {saving ? <span className={styles.saveIndicator}>saving...</span>
+                : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
+                : <span className={styles.saveIndicator}>✓</span>}
+            </>
+          ) : (
+            <span className={styles.ghostHint}>Tap score to lock in par</span>
+          )}
+        </div>
         {isAdmin && hasBeenSaved && (
           <div className={styles.clearRow}>
-            <button className={styles.clearBtn} onClick={clearScore} disabled={saving}>Clear</button>
+            <button className={styles.clearBtn} onClick={clearScore} disabled={saving}>Clear Score</button>
           </div>
         )}
 
-        {/* Hole picker */}
-        <div className={styles.holeDots}>
-          {sortedHoles.map(h => (
-            <button
-              key={h.number}
-              className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
-              onClick={() => flushAndNavigate(h.number)}
-            >
-              {h.number}
-            </button>
-          ))}
+        {/* Teammate on this hole */}
+        {teammate && teammateTotals && (() => {
+          const td = teammateTotals.holeDetails.find(d => d.holeNumber === currentHole)
+          return (
+            <div className={styles.teammateRow}>
+              <span>{teammate.name}</span>
+              <span>{td?.grossScore !== null && td?.grossScore !== undefined ? `${td.grossScore} (${td.points} pts)` : '—'}</span>
+            </div>
+          )
+        })()}
+
+        {/* Nav arrows */}
+        <div className={styles.navArrows}>
+          <button className={styles.navBtn} onClick={() => navigate(-1)} disabled={currentHole <= 1}>
+            ← {currentHole - 1}
+          </button>
+          <button className={styles.navBtn} onClick={() => navigate(1)} disabled={currentHole >= 18}>
+            {currentHole + 1} →
+          </button>
         </div>
       </div>
 
@@ -371,4 +411,3 @@ function LoginPage() {
     </div>
   )
 }
-
