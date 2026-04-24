@@ -9,12 +9,12 @@ import { LatestTicker } from './LatestTicker'
 import { ProgressGraph } from './ProgressGraph'
 import styles from './ScoringPage.module.css'
 
-function netScoreName(net: number): string {
-  if (net <= -2) return 'Net Eagle'
-  if (net === -1) return 'Net Birdie'
-  if (net === 0) return 'Net Par'
-  if (net === 1) return 'Net Bogey'
-  return 'Net Double+'
+function netScoreWord(net: number): string {
+  if (net <= -2) return 'EAGLE'
+  if (net === -1) return 'BIRDIE'
+  if (net === 0) return 'PAR'
+  if (net === 1) return 'BOGEY'
+  return 'DOUBLE+'
 }
 
 export function ScoringPage() {
@@ -28,8 +28,6 @@ export function ScoringPage() {
   // Local score state: tracks pending edits before they're saved
   const [localScores, setLocalScores] = useState<Map<string, number>>(new Map())
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const touchStartX = useRef(0)
-  const touchStartY = useRef(0)
 
   const activePlayer = useMemo(() => {
     if (isAdmin && selectedPlayerId) {
@@ -50,11 +48,6 @@ export function ScoringPage() {
     if (!activePlayer) return null
     return getPlayerTotals(activePlayer, scores, holes, config.doubleHole)
   }, [activePlayer, scores, holes, config.doubleHole])
-
-  const teammateTotals = useMemo(() => {
-    if (!teammate) return null
-    return getPlayerTotals(teammate, scores, holes, config.doubleHole)
-  }, [teammate, scores, holes, config.doubleHole])
 
   // Team leaderboard (source of truth for team totals)
   const teamRows = useMemo(
@@ -202,18 +195,6 @@ export function ScoringPage() {
     if (next >= 1 && next <= 18) flushAndNavigate(next)
   }
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-    touchStartY.current = e.touches[0].clientY
-  }
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    const dy = e.changedTouches[0].clientY - touchStartY.current
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      if (dx > 0) navigate(-1)
-      else navigate(1)
-    }
-  }
 
   if (!currentUser) {
     return <LoginPage />
@@ -266,7 +247,7 @@ export function ScoringPage() {
       )}
 
       {/* Scorecard */}
-      <div className={styles.scorecard} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div className={styles.scorecard}>
         {/* Hole dots */}
         <div className={styles.holeDots}>
           {sortedHoles.map(h => (
@@ -292,16 +273,18 @@ export function ScoringPage() {
           </div>
         )}
 
-        {/* Hole header */}
+        {/* Hole header with nav arrows */}
         <div className={styles.holeHeader}>
-          <div className={styles.holeNumber}>Hole {currentHole}</div>
+          <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
           <div className={styles.holeMeta}>
+            <span className={styles.holeNumber}>Hole {currentHole}</span>
             <span className={styles.parBadge}>Par {hole.par}</span>
             {strokesOnHole > 0 && (
               <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
             )}
             {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
           </div>
+          <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
         </div>
 
         {/* Score input */}
@@ -324,7 +307,8 @@ export function ScoringPage() {
         <div className={styles.resultLine}>
           {hasBeenSaved || hasPendingEdit ? (
             <>
-              <span className={styles.resultName}>{netScoreName(liveNetScore)}</span>
+              <span className={styles.resultNet}>Net</span>
+              <span className={styles.resultName}>{netScoreWord(liveNetScore)}</span>
               <span className={styles.resultArrow}>⇒</span>
               <span className={`${styles.resultPts} ${livePoints > 0 ? styles.pointsPositive : ''}`}>{livePoints} {livePoints === 1 ? 'point' : 'points'}</span>
               {saving ? <span className={styles.saveIndicator}>saving...</span>
@@ -341,26 +325,6 @@ export function ScoringPage() {
           </div>
         )}
 
-        {/* Teammate on this hole */}
-        {teammate && teammateTotals && (() => {
-          const td = teammateTotals.holeDetails.find(d => d.holeNumber === currentHole)
-          return (
-            <div className={styles.teammateRow}>
-              <span>{teammate.name}</span>
-              <span>{td?.grossScore !== null && td?.grossScore !== undefined ? `${td.grossScore} (${td.points} pts)` : '—'}</span>
-            </div>
-          )
-        })()}
-
-        {/* Nav arrows */}
-        <div className={styles.navArrows}>
-          <button className={styles.navBtn} onClick={() => navigate(-1)} disabled={currentHole <= 1}>
-            ← {currentHole - 1}
-          </button>
-          <button className={styles.navBtn} onClick={() => navigate(1)} disabled={currentHole >= 18}>
-            {currentHole + 1} →
-          </button>
-        </div>
       </div>
 
       {/* Latest ticker */}
