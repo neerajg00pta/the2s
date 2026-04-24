@@ -195,7 +195,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 0;
 }
 
 .holeMeta {
@@ -272,7 +271,6 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-  padding: 8px 0;
 }
 
 .scoreBtn {
