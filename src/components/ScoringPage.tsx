@@ -248,19 +248,22 @@ export function ScoringPage() {
 
       {/* Scorecard */}
       <div className={styles.scorecard}>
-        {/* Hole dots */}
-        <div className={styles.holeDots}>
-          {sortedHoles.map(h => (
-            <button
-              key={h.number}
-              className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
-              onClick={() => flushAndNavigate(h.number)}
-            >
-              {h.number}
-            </button>
-          ))}
-        </div>
+        <div className={styles.cardLayout}>
+          {/* Left: hole picker */}
+          <div className={styles.holeDots}>
+            {sortedHoles.map(h => (
+              <button
+                key={h.number}
+                className={`${styles.holeDot} ${h.number === currentHole ? styles.holeDotCurrent : ''} ${scoreSet.has(h.number) ? styles.holeDotFilled : ''}`}
+                onClick={() => flushAndNavigate(h.number)}
+              >
+                {h.number}
+              </button>
+            ))}
+          </div>
 
+          {/* Right: main content */}
+          <div className={styles.cardMain}>
         {/* Gap warnings */}
         {gapWarnings && (
           <div className={styles.gapWarning}>
@@ -324,7 +327,8 @@ export function ScoringPage() {
             <button className={styles.clearBtn} onClick={clearScore} disabled={saving}>Clear Score</button>
           </div>
         )}
-
+          </div>
+        </div>
       </div>
 
       {/* Latest ticker */}
