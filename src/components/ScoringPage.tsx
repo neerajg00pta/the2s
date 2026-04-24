@@ -273,20 +273,18 @@ export function ScoringPage() {
           </div>
         )}
 
-        {/* Hole header with nav arrows + left sidebar */}
+        {/* Hole header with nav arrows */}
         <div className={styles.holeHeader}>
-          <div className={styles.holeSidebar}>
+          <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
+          <div className={styles.holeMeta}>
+            <span className={styles.holeNumber}>Hole {currentHole}</span>
             <span className={styles.parBadge}>Par {hole.par}</span>
             {strokesOnHole > 0 && (
               <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
             )}
             {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
           </div>
-          <div className={styles.holeCenter}>
-            <button className={`${styles.holeArrow} ${currentHole <= 1 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(-1)}>◀</button>
-            <span className={styles.holeNumber}>Hole {currentHole}</span>
-            <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
-          </div>
+          <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
         </div>
 
         {/* Score input */}

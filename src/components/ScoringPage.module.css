@@ -192,23 +192,15 @@
 .holeHeader {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 4px 0;
 }
 
-.holeSidebar {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  min-width: 70px;
-}
-
-.holeCenter {
-  flex: 1;
+.holeMeta {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 10px;
 }
 
 .holeArrow {
