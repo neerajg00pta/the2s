@@ -247,7 +247,7 @@ export function ScoringPage() {
           <div className={styles.viewingText}>
             Viewing: <strong>{activePlayer?.name}</strong>
           </div>
-          <button className={styles.viewingBack} onClick={() => setSelectedPlayerId(null)}>Back to me</button>
+          <button className={styles.viewingBack} onClick={() => setSelectedPlayerId(null)}>Back to my card</button>
         </div>
       )}
 
