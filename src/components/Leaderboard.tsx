@@ -194,7 +194,7 @@ function ScorecardGrid({ players }: { players: GridPlayer[] }) {
                     <div key={h} className={styles.gridPopCell}>
                       {hasScore && strokes > 0 ? (() => {
                         const t = scoreTier(d?.netScore ?? null)
-                        const popCls = t === 'green' ? styles.popsGreen : t === 'red' ? styles.popsRed : styles.popsGrey
+                        const popCls = t === 'gold' ? styles.popsGold : t === 'green' ? styles.popsGreen : styles.popsGrey
                         return <span className={`${styles.gridPops} ${popCls}`}>{'●'.repeat(strokes)}</span>
                       })() : null}
                     </div>
@@ -209,11 +209,11 @@ function ScorecardGrid({ players }: { players: GridPlayer[] }) {
   )
 }
 
-function scoreTier(net: number | null): 'green' | 'grey' | 'red' {
+function scoreTier(net: number | null): 'gold' | 'green' | 'grey' {
   if (net === null) return 'grey'
-  if (net <= -1) return 'green'   // birdie or better
-  if (net <= 1) return 'grey'     // par or bogey
-  return 'red'                     // double+
+  if (net <= -1) return 'gold'    // birdie or better
+  if (net <= 1) return 'green'    // par or bogey
+  return 'grey'                    // double+ (no points)
 }
 
 function ScoreCell({ d }: { d: HoleDetail | undefined }) {
@@ -224,10 +224,10 @@ function ScoreCell({ d }: { d: HoleDetail | undefined }) {
   const tier = scoreTier(net)
   let cls = styles.gridCell
   if (hasScore && net !== null) {
-    if (net <= -1) cls += ` ${styles.scCircle} ${styles.scGreen}`       // birdie+: green circle
-    else if (net === 0) cls += ` ${styles.scGrey}`                       // par: grey, no shape
-    else if (net === 1) cls += ` ${styles.scSquare} ${styles.scGrey}`    // bogey: grey square
-    else cls += ` ${styles.scSquare} ${styles.scRed}`                    // double+: red square
+    if (net <= -1) cls += ` ${styles.scCircle} ${styles.scGold}`       // birdie+: gold circle
+    else if (net === 0) cls += ` ${styles.scGreen}`                     // par: green, no shape
+    else if (net === 1) cls += ` ${styles.scSquare} ${styles.scGreen}`  // bogey: green square
+    else cls += ` ${styles.scSquare} ${styles.scGrey}`                  // double+: grey square
   }
 
   // expose tier for pop dots via data attribute

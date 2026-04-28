@@ -133,15 +133,15 @@
 }
 
 /* Pop dot colors */
+.popsGold { color: var(--accent-gold); }
 .popsGreen { color: var(--accent-green-light); }
 .popsGrey { color: var(--text-muted); }
-.popsRed { color: var(--accent-danger); }
 
 /* Shapes */
 .scCircle .gridScore { border-radius: 50%; border: 1px solid; }
 .scSquare .gridScore { border: 1px solid; }
 
 /* Colors */
+.scGold .gridScore { color: var(--accent-gold); border-color: var(--accent-gold); }
 .scGreen .gridScore { color: var(--accent-green-light); border-color: var(--accent-green-light); }
 .scGrey .gridScore { color: var(--text-muted); border-color: var(--text-muted); }
-.scRed .gridScore { color: var(--accent-danger); border-color: var(--accent-danger); }
