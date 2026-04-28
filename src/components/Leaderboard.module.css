@@ -132,46 +132,16 @@
   height: 6px;
 }
 
-.popsScored {
-  color: var(--accent-green-light);
-}
+/* Pop dot colors */
+.popsGreen { color: var(--accent-green-light); }
+.popsGrey { color: var(--text-muted); }
+.popsRed { color: var(--accent-danger); }
 
-.popsNoPoints {
-  color: var(--text-muted);
-}
+/* Shapes */
+.scCircle .gridScore { border-radius: 50%; border: 1px solid; }
+.scSquare .gridScore { border: 1px solid; }
 
-/* Eagle: green circle */
-.scEagle .gridScore {
-  border-radius: 50%;
-  border: 1px solid var(--accent-green-light);
-  color: var(--accent-green-light);
-}
-
-/* Birdie: green circle */
-.scBirdie .gridScore {
-  border-radius: 50%;
-  border: 1px solid var(--accent-green-light);
-  color: var(--accent-green-light);
-}
-
-/* Par with points: green text */
-.scScored .gridScore {
-  color: var(--accent-green-light);
-}
-
-/* Par no points: grey text */
-.scNoPoints .gridScore {
-  color: var(--text-muted);
-}
-
-/* Bogey: grey square */
-.scBogey .gridScore {
-  border: 1px solid var(--text-muted);
-  color: var(--text-muted);
-}
-
-/* Double+: grey square */
-.scDouble .gridScore {
-  border: 1px solid var(--text-muted);
-  color: var(--text-muted);
-}
+/* Colors */
+.scGreen .gridScore { color: var(--accent-green-light); border-color: var(--accent-green-light); }
+.scGrey .gridScore { color: var(--text-muted); border-color: var(--text-muted); }
+.scRed .gridScore { color: var(--accent-danger); border-color: var(--accent-danger); }

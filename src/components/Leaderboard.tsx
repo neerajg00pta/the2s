@@ -192,7 +192,11 @@ function ScorecardGrid({ players }: { players: GridPlayer[] }) {
                   const strokes = d?.strokesReceived ?? 0
                   return (
                     <div key={h} className={styles.gridPopCell}>
-                      {hasScore && strokes > 0 ? <span className={`${styles.gridPops} ${(d?.points ?? 0) > 0 ? styles.popsScored : styles.popsNoPoints}`}>{'●'.repeat(strokes)}</span> : null}
+                      {hasScore && strokes > 0 ? (() => {
+                        const t = scoreTier(d?.netScore ?? null)
+                        const popCls = t === 'green' ? styles.popsGreen : t === 'red' ? styles.popsRed : styles.popsGrey
+                        return <span className={`${styles.gridPops} ${popCls}`}>{'●'.repeat(strokes)}</span>
+                      })() : null}
                     </div>
                   )
                 })}
@@ -205,23 +209,30 @@ function ScorecardGrid({ players }: { players: GridPlayer[] }) {
   )
 }
 
+function scoreTier(net: number | null): 'green' | 'grey' | 'red' {
+  if (net === null) return 'grey'
+  if (net <= -1) return 'green'   // birdie or better
+  if (net <= 1) return 'grey'     // par or bogey
+  return 'red'                     // double+
+}
+
 function ScoreCell({ d }: { d: HoleDetail | undefined }) {
   if (!d) return <div className={styles.gridCell}><span className={styles.gridScore}>·</span></div>
 
   const hasScore = d.grossScore !== null
   const net = d.netScore
-  const scored = hasScore && d.points > 0
+  const tier = scoreTier(net)
   let cls = styles.gridCell
   if (hasScore && net !== null) {
-    if (net <= -2) cls += ` ${styles.scEagle}`
-    else if (net === -1) cls += ` ${styles.scBirdie}`
-    else if (net === 0) cls += scored ? ` ${styles.scScored}` : ` ${styles.scNoPoints}`
-    else if (net === 1) cls += ` ${styles.scBogey}`
-    else cls += ` ${styles.scDouble}`
+    if (net <= -1) cls += ` ${styles.scCircle} ${styles.scGreen}`       // birdie+: green circle
+    else if (net === 0) cls += ` ${styles.scGrey}`                       // par: grey, no shape
+    else if (net === 1) cls += ` ${styles.scSquare} ${styles.scGrey}`    // bogey: grey square
+    else cls += ` ${styles.scSquare} ${styles.scRed}`                    // double+: red square
   }
 
+  // expose tier for pop dots via data attribute
   return (
-    <div className={cls}>
+    <div className={cls} data-tier={tier}>
       <span className={styles.gridScore}>{hasScore ? d.grossScore : '·'}</span>
     </div>
   )
