@@ -31,11 +31,13 @@ export function ScoringPage() {
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const activePlayer = useMemo(() => {
-    if (isAdmin && selectedPlayerId) {
+    if (selectedPlayerId) {
       return users.find(u => u.id === selectedPlayerId) ?? currentUser
     }
     return currentUser
-  }, [isAdmin, selectedPlayerId, users, currentUser])
+  }, [selectedPlayerId, users, currentUser])
+
+  const isViewingOther = activePlayer?.id !== currentUser?.id
 
   const sortedHoles = useMemo(() => [...holes].sort((a, b) => a.number - b.number), [holes])
   const hole = sortedHoles.find(h => h.number === currentHole)
@@ -219,7 +221,7 @@ export function ScoringPage() {
       <div className={styles.scoreboard}>
         <div className={styles.scoreboardItem}>
           <div className={styles.scoreboardValue}>{playerTotals?.totalPoints ?? 0}</div>
-          <div className={styles.scoreboardLabel}>Me</div>
+          <div className={styles.scoreboardLabel}>{isViewingOther ? activePlayer?.name : 'Me'}</div>
         </div>
         <div className={`${styles.scoreboardItem} ${styles.scoreboardTeam}`}>
           <div className={styles.scoreboardValue}>{teamTotal}</div>
@@ -231,12 +233,41 @@ export function ScoringPage() {
         </div>
       </div>
 
-      {/* Admin player selector */}
+      {/* Viewing banner + teammate toggle */}
+      {isViewingOther && (
+        <div className={styles.viewingBanner}>
+          <div className={styles.viewingText}>
+            Viewing: <strong>{activePlayer?.name}</strong> ({activePlayer?.pops} pops)
+          </div>
+          <button className={styles.viewingBack} onClick={() => setSelectedPlayerId(null)}>Back to me</button>
+        </div>
+      )}
+
+      {/* Teammate toggle (always available) */}
+      {teammate && !isViewingOther && (
+        <div className={styles.teammateToggle}>
+          <button className={styles.teammateBtn} onClick={() => setSelectedPlayerId(teammate.id)}>
+            View {teammate.name}'s card
+          </button>
+        </div>
+      )}
+      {teammate && isViewingOther && activePlayer?.id === teammate.id && (
+        <div className={styles.teammateToggle}>
+          <button className={styles.teammateBtn} onClick={() => setSelectedPlayerId(null)}>
+            Back to my card
+          </button>
+        </div>
+      )}
+
+      {/* Admin: full player selector */}
       {isAdmin && (
         <div className={styles.adminSelector}>
           <select
             value={selectedPlayerId ?? currentUser?.id ?? ''}
-            onChange={e => setSelectedPlayerId(e.target.value || null)}
+            onChange={e => {
+              const val = e.target.value
+              setSelectedPlayerId(val === currentUser?.id ? null : val || null)
+            }}
             className={styles.playerSelect}
           >
             <option value={currentUser?.id ?? ''}>My scores</option>
@@ -248,7 +279,7 @@ export function ScoringPage() {
       )}
 
       {/* Scorecard */}
-      <div className={styles.scorecard}>
+      <div className={`${styles.scorecard} ${isViewingOther ? styles.scorecardOther : ''}`}>
         {/* Gap warnings */}
         {gapWarnings && (
           <div className={styles.gapWarning}>
