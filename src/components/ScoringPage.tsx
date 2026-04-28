@@ -10,7 +10,8 @@ import { ProgressGraph } from './ProgressGraph'
 import styles from './ScoringPage.module.css'
 
 function netScoreWord(net: number): string {
-  if (net <= -2) return 'EAGLE'
+  if (net <= -3) return 'D.EAGLE'
+  if (net === -2) return 'EAGLE'
   if (net === -1) return 'BIRDIE'
   if (net === 0) return 'PAR'
   if (net === 1) return 'BOGEY'

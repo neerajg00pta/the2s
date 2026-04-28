@@ -126,35 +126,26 @@
 }
 
 .gridPops {
-  font-size: 8px;
+  font-size: 6px;
   line-height: 1;
-  color: var(--accent-green-light);
   letter-spacing: 1px;
   height: 6px;
 }
 
-/* Eagle: gold circle */
-.scEagle .gridScore {
-  border-radius: 50%;
-  border: 2px solid var(--accent-gold);
-  color: var(--accent-gold);
-  background: rgba(255, 215, 0, 0.1);
-}
-
-/* Birdie: green circle */
-.scBirdie .gridScore {
-  border-radius: 50%;
-  border: 2px solid var(--accent-green-light);
+.popsScored {
   color: var(--accent-green-light);
 }
 
-/* Bogey: square border */
-.scBogey .gridScore {
-  border: 2px solid var(--text-secondary);
+.popsNoPoints {
+  color: var(--text-muted);
 }
 
-/* Double bogey+: red square */
-.scDouble .gridScore {
-  border: 2px solid var(--accent-danger);
-  color: var(--accent-danger);
+/* Scored points: green */
+.scScored .gridScore {
+  color: var(--accent-green-light);
+}
+
+/* No points: grey */
+.scNoPoints .gridScore {
+  color: var(--text-muted);
 }
