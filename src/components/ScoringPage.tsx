@@ -241,8 +241,8 @@ export function ScoringPage() {
         </div>
       </div>
 
-      {/* Viewing banner (admin only, when viewing non-teammate) */}
-      {isViewingOther && isAdmin && activePlayer?.id !== teammate?.id && (
+      {/* Viewing banner — anytime viewing someone else */}
+      {isViewingOther && (
         <div className={styles.viewingBanner}>
           <div className={styles.viewingText}>
             Viewing: <strong>{activePlayer?.name}</strong>
