@@ -3,7 +3,7 @@ import { useData } from '../contexts/DataContext'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
 import { upsertScore, deleteScore } from '../lib/data-service'
-import { getStrokesOnHole, getNetScore, getPoints, getPlayerTotals, buildTeamLeaderboard, buildIndividualLeaderboard } from '../lib/scoring'
+import { getStrokesOnHole, getNetScore, getPoints, getPlayerTotals, buildTeamLeaderboard, buildIndividualLeaderboard, getDoubleHole } from '../lib/scoring'
 import { Leaderboard } from './Leaderboard'
 import { LatestTicker } from './LatestTicker'
 import { ProgressGraph } from './ProgressGraph'
@@ -19,7 +19,7 @@ function netScoreWord(net: number): string {
 
 export function ScoringPage() {
   const { currentUser, isAdmin } = useAuth()
-  const { config, users, teams, holes, scores, refresh } = useData()
+  const { users, teams, holes, scores, refresh } = useData()
   const { addToast } = useToast()
   const [currentHole, setCurrentHole] = useState(1)
   const [saving, setSaving] = useState(false)
@@ -49,13 +49,13 @@ export function ScoringPage() {
 
   const playerTotals = useMemo(() => {
     if (!activePlayer) return null
-    return getPlayerTotals(activePlayer, scores, holes, config.doubleHole)
-  }, [activePlayer, scores, holes, config.doubleHole])
+    return getPlayerTotals(activePlayer, scores, holes, getDoubleHole(holes))
+  }, [activePlayer, scores, holes, getDoubleHole(holes)])
 
   // Team leaderboard (source of truth for team totals)
   const teamRows = useMemo(
-    () => buildTeamLeaderboard(teams, users, scores, holes, config.doubleHole),
-    [teams, users, scores, holes, config.doubleHole]
+    () => buildTeamLeaderboard(teams, users, scores, holes, getDoubleHole(holes)),
+    [teams, users, scores, holes, getDoubleHole(holes)]
   )
 
   const myTeamRow = teamRows.find(r => r.playerTotals.some(p => p.userId === activePlayer?.id))
@@ -208,12 +208,12 @@ export function ScoringPage() {
   }
 
   const strokesOnHole = activePlayer ? getStrokesOnHole(activePlayer.pops, hole.handicap) : 0
-  const isDoubleHole = hole.number === config.doubleHole
+  const isDoubleHole = hole.number === getDoubleHole(holes)
   const liveNetScore = getNetScore(displayScore, hole.par, strokesOnHole)
   const livePoints = getPoints(liveNetScore, isDoubleHole)
 
   // Individual leaderboard
-  const playerRows = buildIndividualLeaderboard(teams, users, scores, holes, config.doubleHole)
+  const playerRows = buildIndividualLeaderboard(teams, users, scores, holes, getDoubleHole(holes))
 
   return (
     <div className={styles.page}>
@@ -301,7 +301,9 @@ export function ScoringPage() {
             {strokesOnHole > 0 && (
               <span className={styles.popsBadge}>{strokesOnHole === 1 ? '1 Pop' : '2 Pops'}</span>
             )}
-            {isDoubleHole && <span className={styles.doubleBadge}>2x</span>}
+            {hole.designation === '2x' && <span className={styles.doubleBadge}>2x</span>}
+            {hole.designation === 'iii' && <span className={styles.iiiBadge}>IIIs</span>}
+            {hole.designation === 'tips' && <span className={styles.tipsBadge}>Tips</span>}
           </div>
           <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
         </div>

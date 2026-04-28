@@ -300,17 +300,29 @@
   border-radius: 4px;
 }
 
-.doubleBadge {
+.doubleBadge, .iiiBadge, .tipsBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-gold);
-  color: #000;
   font-weight: 800;
   font-size: 13px;
   padding: 1px 7px;
   border-radius: 4px;
-  animation: pulse-gold 2s infinite;
+}
+
+.doubleBadge {
+  background: var(--accent-gold);
+  color: #000;
+}
+
+.iiiBadge {
+  background: var(--accent-blue);
+  color: #fff;
+}
+
+.tipsBadge {
+  background: #ab47bc;
+  color: #fff;
 }
 
 @keyframes pulse-gold {

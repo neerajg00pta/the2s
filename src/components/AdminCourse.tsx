@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { useData } from '../contexts/DataContext'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
-import { updateHole, updateConfig } from '../lib/data-service'
+import { updateHole } from '../lib/data-service'
 import styles from './AdminCourse.module.css'
 
 export function AdminCourse() {
@@ -27,7 +27,6 @@ export function AdminCourse() {
 
   const handleHandicapChange = useCallback(async (holeNumber: number, handicap: number) => {
     if (handicap < 1 || handicap > 18) return
-    // Check for duplicates
     const existing = holes.find(h => h.handicap === handicap && h.number !== holeNumber)
     if (existing) {
       addToast(`Handicap ${handicap} already used by hole ${existing.number}`, 'error')
@@ -44,17 +43,22 @@ export function AdminCourse() {
     }
   }, [holes, refresh, addToast])
 
-  const handleDoubleHole = useCallback(async (holeNumber: number) => {
+  const handleDesignation = useCallback(async (holeNumber: number, value: string) => {
+    const designation = value || null
+    setSaving(holeNumber)
     try {
-      await updateConfig({ doubleHole: holeNumber })
+      await updateHole(holeNumber, { designation })
       await refresh()
-      addToast(`Hole ${holeNumber} set as double points`, 'success')
     } catch {
       addToast('Save failed', 'error')
+    } finally {
+      setSaving(null)
     }
   }, [refresh, addToast])
 
   if (!isAdmin) return <div className={styles.denied}>Admin access required</div>
+
+  const doubleHole = sortedHoles.find(h => h.designation === '2x')
 
   return (
     <div className={styles.container}>
@@ -68,7 +72,7 @@ export function AdminCourse() {
               <th>Hole</th>
               <th>Par</th>
               <th>HCP</th>
-              <th>2x</th>
+              <th>Special</th>
             </tr>
           </thead>
           <tbody>
@@ -96,13 +100,17 @@ export function AdminCourse() {
                     className={styles.hcpInput}
                   />
                 </td>
-                <td className={styles.doubleCol}>
-                  <button
-                    className={`${styles.doubleBtn} ${config.doubleHole === h.number ? styles.doubleBtnActive : ''}`}
-                    onClick={() => handleDoubleHole(h.number)}
+                <td>
+                  <select
+                    value={h.designation ?? ''}
+                    onChange={e => handleDesignation(h.number, e.target.value)}
+                    className={`${styles.select} ${h.designation === '2x' ? styles.desig2x : ''} ${h.designation === 'iii' ? styles.desigIii : ''} ${h.designation === 'tips' ? styles.desigTips : ''}`}
                   >
-                    {config.doubleHole === h.number ? '★' : '○'}
-                  </button>
+                    <option value="">—</option>
+                    <option value="2x">2x</option>
+                    <option value="iii">IIIs</option>
+                    <option value="tips">Tips</option>
+                  </select>
                 </td>
               </tr>
             ))}
@@ -116,7 +124,7 @@ export function AdminCourse() {
 
       <div className={styles.summary}>
         <span>Total Par: {sortedHoles.reduce((s, h) => s + h.par, 0)}</span>
-        {config.doubleHole > 0 && <span>Double Points: Hole {config.doubleHole}</span>}
+        {doubleHole && <span>2x: Hole {doubleHole.number}</span>}
       </div>
     </div>
   )

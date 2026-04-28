@@ -1,15 +1,15 @@
 import { useMemo } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { useData } from '../contexts/DataContext'
-import { buildProgressionData, TEAM_COLORS } from '../lib/scoring'
+import { buildProgressionData, getDoubleHole, TEAM_COLORS } from '../lib/scoring'
 import styles from './ProgressGraph.module.css'
 
 export function ProgressGraph() {
-  const { config, users, teams, holes, scores } = useData()
+  const { users, teams, holes, scores } = useData()
 
   const data = useMemo(
-    () => buildProgressionData(teams, users, scores, holes, config.doubleHole),
-    [teams, users, scores, holes, config.doubleHole]
+    () => buildProgressionData(teams, users, scores, holes, getDoubleHole(holes)),
+    [teams, users, scores, holes, getDoubleHole(holes)]
   )
 
   const teamNames = useMemo(() => teams.map(t => t.name), [teams])

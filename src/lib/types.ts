@@ -23,10 +23,13 @@ export interface Team {
   createdAt: string
 }
 
+export type HoleDesignation = '2x' | 'iii' | 'tips' | null
+
 export interface Hole {
   number: number
   par: number
   handicap: number
+  designation: HoleDesignation
 }
 
 export interface Score {

@@ -1,8 +1,10 @@
 import styles from './Rules.module.css'
 import { useData } from '../contexts/DataContext'
+import { getDoubleHole } from '../lib/scoring'
 
 export function Rules() {
-  const { config } = useData()
+  const { holes } = useData()
+  const doubleHoleNum = getDoubleHole(holes)
 
   return (
     <div className={styles.container}>
@@ -39,8 +41,8 @@ export function Rules() {
       <section className={styles.section}>
         <h3>Double Points Hole</h3>
         <p>
-          {config.doubleHole > 0
-            ? <>Hole <strong>{config.doubleHole}</strong> is the double points hole.</>
+          {doubleHoleNum > 0
+            ? <>Hole <strong>{doubleHoleNum}</strong> is the double points hole.</>
             : <>One hole will be designated as the double points hole.</>
           }
           {' '}Any points earned on that hole are <span className={styles.gold}>multiplied by 2</span>.

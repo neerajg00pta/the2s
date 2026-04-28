@@ -1,6 +1,6 @@
 import { useMemo, useRef, useCallback } from 'react'
 import { useData } from '../contexts/DataContext'
-import { buildTeamLeaderboard, getStrokesOnHole, getNetScore, getPoints } from '../lib/scoring'
+import { buildTeamLeaderboard, getStrokesOnHole, getNetScore, getPoints, getDoubleHole } from '../lib/scoring'
 import styles from './LatestTicker.module.css'
 
 function playerInitials(fullName: string): string {
@@ -17,13 +17,13 @@ interface TickerItem {
 }
 
 export function LatestTicker() {
-  const { users, teams, holes, scores, config } = useData()
+  const { users, teams, holes, scores } = useData()
 
   const items = useMemo(() => {
     if (!teams.length || !scores.length || !holes.length) return []
 
     const holeMap = new Map(holes.map(h => [h.number, h]))
-    const teamRows = buildTeamLeaderboard(teams, users, scores, holes, config.doubleHole)
+    const teamRows = buildTeamLeaderboard(teams, users, scores, holes, getDoubleHole(holes))
     const result: TickerItem[] = []
 
     for (let rank = 0; rank < teamRows.length; rank++) {
@@ -60,14 +60,14 @@ export function LatestTicker() {
         if (!s) continue
         const strokes = getStrokesOnHole(m.pops, hole.handicap)
         const net = getNetScore(s.grossScore, hole.par, strokes)
-        holePts += getPoints(net, latestHole === config.doubleHole)
+        holePts += getPoints(net, latestHole === getDoubleHole(holes))
       }
 
       result.push({ rank: rank + 1, teamLabel, points: holePts, holeNumber: latestHole })
     }
 
     return result
-  }, [users, teams, holes, scores, config.doubleHole])
+  }, [users, teams, holes, scores, getDoubleHole(holes)])
 
   // Drag-to-scroll
   const trackRef = useRef<HTMLDivElement>(null)

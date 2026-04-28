@@ -82,21 +82,22 @@
   text-align: center;
 }
 
-.doubleCol {
-  width: 48px;
-}
-
-.doubleBtn {
-  font-size: 20px;
-  padding: 4px 8px;
-  color: var(--text-muted);
-  border-radius: 4px;
-  transition: all 0.15s;
-}
-
-.doubleBtnActive {
+.desig2x {
+  background: rgba(255, 215, 0, 0.2);
   color: var(--accent-gold);
-  background: rgba(255, 215, 0, 0.15);
+  border-color: var(--accent-gold);
+}
+
+.desigIii {
+  background: rgba(66, 165, 245, 0.2);
+  color: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
+.desigTips {
+  background: rgba(171, 71, 188, 0.2);
+  color: #ab47bc;
+  border-color: #ab47bc;
 }
 
 .rowSaving {

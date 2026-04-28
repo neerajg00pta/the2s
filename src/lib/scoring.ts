@@ -1,5 +1,10 @@
 import type { Hole, Score, User, Team } from './types'
 
+/** Get the double-points hole number from holes array (0 if none) */
+export function getDoubleHole(holes: Hole[]): number {
+  return holes.find(h => h.designation === '2x')?.number ?? 0
+}
+
 /**
  * How many strokes a player receives on a given hole.
  * pops 0-18: 1 stroke on hardest N holes (handicap 1..N)

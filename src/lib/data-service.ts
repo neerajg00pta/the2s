@@ -48,6 +48,7 @@ export async function fetchAllData(): Promise<AllData> {
     number: r.number as number,
     par: r.par as number,
     handicap: r.handicap as number,
+    designation: (r.designation as Hole['designation']) ?? null,
   }))
 
   const scores: Score[] = (scoresRes.data ?? []).map((r: Record<string, unknown>) => ({
@@ -175,10 +176,12 @@ export async function deleteTeam(teamId: string): Promise<void> {
 export async function updateHole(holeNumber: number, updates: Partial<{
   par: number
   handicap: number
+  designation: string | null
 }>): Promise<void> {
   const payload: Record<string, unknown> = {}
   if (updates.par !== undefined) payload.par = updates.par
   if (updates.handicap !== undefined) payload.handicap = updates.handicap
+  if ('designation' in updates) payload.designation = updates.designation
 
   const { error } = await supabase.from('the2s_holes').update(payload).eq('number', holeNumber)
   if (error) throw new Error(error.message)
