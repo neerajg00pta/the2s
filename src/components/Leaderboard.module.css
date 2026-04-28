@@ -140,12 +140,38 @@
   color: var(--text-muted);
 }
 
-/* Scored points: green */
+/* Eagle: green circle */
+.scEagle .gridScore {
+  border-radius: 50%;
+  border: 1px solid var(--accent-green-light);
+  color: var(--accent-green-light);
+}
+
+/* Birdie: green circle */
+.scBirdie .gridScore {
+  border-radius: 50%;
+  border: 1px solid var(--accent-green-light);
+  color: var(--accent-green-light);
+}
+
+/* Par with points: green text */
 .scScored .gridScore {
   color: var(--accent-green-light);
 }
 
-/* No points: grey */
+/* Par no points: grey text */
 .scNoPoints .gridScore {
+  color: var(--text-muted);
+}
+
+/* Bogey: grey square */
+.scBogey .gridScore {
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+}
+
+/* Double+: grey square */
+.scDouble .gridScore {
+  border: 1px solid var(--text-muted);
   color: var(--text-muted);
 }

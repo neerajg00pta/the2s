@@ -209,10 +209,19 @@ function ScoreCell({ d }: { d: HoleDetail | undefined }) {
   if (!d) return <div className={styles.gridCell}><span className={styles.gridScore}>·</span></div>
 
   const hasScore = d.grossScore !== null
+  const net = d.netScore
   const scored = hasScore && d.points > 0
+  let cls = styles.gridCell
+  if (hasScore && net !== null) {
+    if (net <= -2) cls += ` ${styles.scEagle}`
+    else if (net === -1) cls += ` ${styles.scBirdie}`
+    else if (net === 0) cls += scored ? ` ${styles.scScored}` : ` ${styles.scNoPoints}`
+    else if (net === 1) cls += ` ${styles.scBogey}`
+    else cls += ` ${styles.scDouble}`
+  }
 
   return (
-    <div className={`${styles.gridCell} ${hasScore ? (scored ? styles.scScored : styles.scNoPoints) : ''}`}>
+    <div className={cls}>
       <span className={styles.gridScore}>{hasScore ? d.grossScore : '·'}</span>
     </div>
   )
