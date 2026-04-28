@@ -222,7 +222,14 @@ export function ScoringPage() {
       <div className={styles.scoreboard}>
         <div className={styles.scoreboardItem}>
           <div className={styles.scoreboardValue}>{playerTotals?.totalPoints ?? 0}</div>
-          <div className={styles.scoreboardLabel}>{isViewingOther ? activePlayer?.name : 'Me'}</div>
+          <div
+            className={`${styles.scoreboardLabel} ${teammate ? styles.scoreboardLabelTap : ''}`}
+            onClick={() => {
+              if (!teammate) return
+              if (isViewingOther) setSelectedPlayerId(null)
+              else setSelectedPlayerId(teammate.id)
+            }}
+          >{isViewingOther ? activePlayer?.name : 'Me'}</div>
         </div>
         <div className={`${styles.scoreboardItem} ${styles.scoreboardTeam}`}>
           <div className={styles.scoreboardValue}>{teamTotal}</div>
@@ -234,29 +241,13 @@ export function ScoringPage() {
         </div>
       </div>
 
-      {/* Viewing banner + teammate toggle */}
-      {isViewingOther && (
+      {/* Viewing banner (admin only, when viewing non-teammate) */}
+      {isViewingOther && isAdmin && activePlayer?.id !== teammate?.id && (
         <div className={styles.viewingBanner}>
           <div className={styles.viewingText}>
-            Viewing: <strong>{activePlayer?.name}</strong> ({activePlayer?.pops} pops)
+            Viewing: <strong>{activePlayer?.name}</strong>
           </div>
           <button className={styles.viewingBack} onClick={() => setSelectedPlayerId(null)}>Back to me</button>
-        </div>
-      )}
-
-      {/* Teammate toggle (always available) */}
-      {teammate && !isViewingOther && (
-        <div className={styles.teammateToggle}>
-          <button className={styles.teammateBtn} onClick={() => setSelectedPlayerId(teammate.id)}>
-            View {teammate.name}'s card
-          </button>
-        </div>
-      )}
-      {teammate && isViewingOther && activePlayer?.id === teammate.id && (
-        <div className={styles.teammateToggle}>
-          <button className={styles.teammateBtn} onClick={() => setSelectedPlayerId(null)}>
-            Back to my card
-          </button>
         </div>
       )}
 

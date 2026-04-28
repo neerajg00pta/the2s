@@ -107,6 +107,13 @@
   margin-top: 4px;
 }
 
+.scoreboardLabelTap {
+  text-decoration: underline;
+  text-decoration-color: var(--border-light);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
 /* ── Viewing banner ── */
 .viewingBanner {
   display: flex;
