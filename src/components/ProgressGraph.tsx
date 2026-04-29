@@ -20,13 +20,23 @@ export function ProgressGraph() {
 
   const teamNames = useMemo(() => teams.map(t => t.name), [teams])
 
-  // Build team initials map: "Russell/Lowrey" -> "PR/SL"
+  // Build team initials and last names maps
   const teamInitials = useMemo(() => {
     const map = new Map<string, string>()
     for (const team of teams) {
       const members = users.filter(u => u.teamId === team.id)
       const initials = members.map(m => playerInitials(m.fullName || m.name)).join('/')
       map.set(team.name, initials)
+    }
+    return map
+  }, [teams, users])
+
+  const teamLastNames = useMemo(() => {
+    const map = new Map<string, string>()
+    for (const team of teams) {
+      const members = users.filter(u => u.teamId === team.id)
+      const names = members.map(m => m.name).join('/')
+      map.set(team.name, names)
     }
     return map
   }, [teams, users])
@@ -87,14 +97,14 @@ export function ProgressGraph() {
                   </div>
                 )
               }}
-              position={{ x: 8, y: 8 }}
+              position={{ x: 35, y: 8 }}
               cursor={{ stroke: 'var(--text-muted)', strokeWidth: 1 }}
             />
             <Legend
-              wrapperStyle={{ fontSize: 11, paddingTop: 12 }}
+              wrapperStyle={{ fontSize: 11, paddingTop: 12, display: 'flex', justifyContent: 'center' }}
               formatter={(value: string) => (
                 <span style={{ color: colorMap.get(value) ?? 'var(--text-secondary)' }}>
-                  {teamInitials.get(value) ?? value}
+                  {teamLastNames.get(value) ?? value}
                 </span>
               )}
             />
