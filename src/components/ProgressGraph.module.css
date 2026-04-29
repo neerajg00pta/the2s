@@ -19,6 +19,17 @@
   padding: 8px 0 8px 0;
 }
 
+.tooltip {
+  background: rgba(10, 15, 10, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+  font-family: var(--font);
+}
+
 .empty {
   text-align: center;
   padding: 48px 16px;

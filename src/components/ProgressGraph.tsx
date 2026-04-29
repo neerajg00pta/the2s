@@ -1,18 +1,42 @@
 import { useMemo } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { useData } from '../contexts/DataContext'
 import { buildProgressionData, getDoubleHole, TEAM_COLORS } from '../lib/scoring'
 import styles from './ProgressGraph.module.css'
+
+function playerInitials(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/)
+  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  return fullName.slice(0, 2).toUpperCase()
+}
 
 export function ProgressGraph() {
   const { users, teams, holes, scores } = useData()
 
   const data = useMemo(
     () => buildProgressionData(teams, users, scores, holes, getDoubleHole(holes)),
-    [teams, users, scores, holes, getDoubleHole(holes)]
+    [teams, users, scores, holes]
   )
 
   const teamNames = useMemo(() => teams.map(t => t.name), [teams])
+
+  // Build team initials map: "Russell/Lowrey" -> "PR/SL"
+  const teamInitials = useMemo(() => {
+    const map = new Map<string, string>()
+    for (const team of teams) {
+      const members = users.filter(u => u.teamId === team.id)
+      const initials = members.map(m => playerInitials(m.fullName || m.name)).join('/')
+      map.set(team.name, initials)
+    }
+    return map
+  }, [teams, users])
+
+  // Color map for tooltip
+  const colorMap = useMemo(() => {
+    const map = new Map<string, string>()
+    teamNames.forEach((name, i) => map.set(name, TEAM_COLORS[i % TEAM_COLORS.length]))
+    return map
+  }, [teamNames])
 
   if (teams.length === 0) {
     return (
@@ -22,7 +46,6 @@ export function ProgressGraph() {
     )
   }
 
-  // Find max points for Y axis
   const maxPoints = data.reduce((max, point) => {
     for (const name of teamNames) {
       const val = point[name]
@@ -35,7 +58,7 @@ export function ProgressGraph() {
     <div className={styles.container}>
       <div className={styles.chartWrap}>
         <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+          <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="hole"
@@ -47,9 +70,33 @@ export function ProgressGraph() {
               tick={{ fontSize: 12, fill: 'var(--text-secondary)' }}
               domain={[0, Math.ceil((maxPoints + 5) / 5) * 5]}
             />
+            <Tooltip
+              content={({ active, payload }) => {
+                if (!active || !payload?.length) return null
+                const entries = payload
+                  .filter(p => p.value !== null && p.value !== undefined)
+                  .map(p => ({ name: p.dataKey as string, value: p.value as number, color: p.color ?? '#fff' }))
+                  .sort((a, b) => b.value - a.value)
+                return (
+                  <div className={styles.tooltip}>
+                    {entries.map(e => (
+                      <div key={e.name} style={{ color: e.color }}>
+                        {teamInitials.get(e.name) ?? e.name}: {e.value}
+                      </div>
+                    ))}
+                  </div>
+                )
+              }}
+              position={{ x: 8, y: 8 }}
+              cursor={{ stroke: 'var(--text-muted)', strokeWidth: 1 }}
+            />
             <Legend
-              wrapperStyle={{ fontSize: 12, color: 'var(--text-secondary)', textAlign: 'center' }}
-              align="center"
+              wrapperStyle={{ fontSize: 11, paddingTop: 12 }}
+              formatter={(value: string) => (
+                <span style={{ color: colorMap.get(value) ?? 'var(--text-secondary)' }}>
+                  {teamInitials.get(value) ?? value}
+                </span>
+              )}
             />
             {teamNames.map((name, i) => (
               <Line
