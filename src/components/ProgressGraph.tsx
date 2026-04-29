@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts'
 import { useData } from '../contexts/DataContext'
 import { buildProgressionData, getDoubleHole, TEAM_COLORS } from '../lib/scoring'
 import styles from './ProgressGraph.module.css'
@@ -35,27 +35,17 @@ export function ProgressGraph() {
     <div className={styles.container}>
       <div className={styles.chartWrap}>
         <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 5 }}>
+          <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="hole"
               stroke="var(--text-muted)"
-              tick={{ fontSize: 12, fill: 'var(--text-secondary)' }}
-              label={{ value: 'Hole', position: 'insideBottom', offset: -2, style: { fill: 'var(--text-muted)', fontSize: 12 } }}
+              tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
             />
             <YAxis
               stroke="var(--text-muted)"
               tick={{ fontSize: 12, fill: 'var(--text-secondary)' }}
               domain={[0, Math.ceil((maxPoints + 5) / 5) * 5]}
-            />
-            <Tooltip
-              contentStyle={{
-                background: 'var(--bg-elevated)',
-                border: '1px solid var(--border-light)',
-                borderRadius: 'var(--radius)',
-                color: 'var(--text-primary)',
-                fontSize: 13,
-              }}
             />
             <Legend
               wrapperStyle={{ fontSize: 12, color: 'var(--text-secondary)' }}
