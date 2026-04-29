@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useData } from '../contexts/DataContext'
 import { buildProgressionData, getDoubleHole, TEAM_COLORS } from '../lib/scoring'
 import styles from './ProgressGraph.module.css'
@@ -62,7 +62,7 @@ export function ProgressGraph() {
     <div className={styles.container}>
       <div className={styles.chartWrap}>
         <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
+          <LineChart data={data} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="hole"
@@ -94,19 +94,6 @@ export function ProgressGraph() {
               position={{ x: 35, y: 8 }}
               cursor={{ stroke: 'var(--text-muted)', strokeWidth: 1 }}
             />
-            <Legend
-              wrapperStyle={{ fontSize: 11, paddingTop: 12 }}
-              content={({ payload }) => (
-                <div className={styles.legend}>
-                  {(payload ?? []).map((entry) => (
-                    <span key={entry.value} className={styles.legendItem}>
-                      <span className={styles.legendDot} style={{ background: entry.color }} />
-                      <span style={{ color: entry.color }}>{teamLastNames.get(entry.value as string) ?? entry.value}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-            />
             {teamNames.map((name, i) => (
               <Line
                 key={name}
@@ -121,6 +108,14 @@ export function ProgressGraph() {
             ))}
           </LineChart>
         </ResponsiveContainer>
+      </div>
+      <div className={styles.legend}>
+        {teamNames.map((name, i) => (
+          <span key={name} className={styles.legendItem}>
+            <span className={styles.legendDot} style={{ background: TEAM_COLORS[i % TEAM_COLORS.length] }} />
+            <span style={{ color: TEAM_COLORS[i % TEAM_COLORS.length] }}>{teamLastNames.get(name) ?? name}</span>
+          </span>
+        ))}
       </div>
     </div>
   )
