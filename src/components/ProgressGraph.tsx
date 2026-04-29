@@ -48,7 +48,8 @@ export function ProgressGraph() {
               domain={[0, Math.ceil((maxPoints + 5) / 5) * 5]}
             />
             <Legend
-              wrapperStyle={{ fontSize: 12, color: 'var(--text-secondary)' }}
+              wrapperStyle={{ fontSize: 12, color: 'var(--text-secondary)', textAlign: 'center' }}
+              align="center"
             />
             {teamNames.map((name, i) => (
               <Line
