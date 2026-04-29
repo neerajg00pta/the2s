@@ -41,12 +41,6 @@ export function ProgressGraph() {
     return map
   }, [teams, users])
 
-  // Color map for tooltip
-  const colorMap = useMemo(() => {
-    const map = new Map<string, string>()
-    teamNames.forEach((name, i) => map.set(name, TEAM_COLORS[i % TEAM_COLORS.length]))
-    return map
-  }, [teamNames])
 
   if (teams.length === 0) {
     return (
@@ -101,11 +95,16 @@ export function ProgressGraph() {
               cursor={{ stroke: 'var(--text-muted)', strokeWidth: 1 }}
             />
             <Legend
-              wrapperStyle={{ fontSize: 11, paddingTop: 12, display: 'flex', justifyContent: 'center' }}
-              formatter={(value: string) => (
-                <span style={{ color: colorMap.get(value) ?? 'var(--text-secondary)' }}>
-                  {teamLastNames.get(value) ?? value}
-                </span>
+              wrapperStyle={{ fontSize: 11, paddingTop: 12 }}
+              content={({ payload }) => (
+                <div className={styles.legend}>
+                  {(payload ?? []).map((entry) => (
+                    <span key={entry.value} className={styles.legendItem}>
+                      <span className={styles.legendDot} style={{ background: entry.color }} />
+                      <span style={{ color: entry.color }}>{teamLastNames.get(entry.value as string) ?? entry.value}</span>
+                    </span>
+                  ))}
+                </div>
               )}
             />
             {teamNames.map((name, i) => (
