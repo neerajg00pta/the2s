@@ -81,40 +81,23 @@ export function ScoringPage() {
     return new Set(scores.filter(s => s.userId === activePlayer.id).map(s => s.holeNumber))
   }, [activePlayer, scores])
 
-  // Compute gap warnings: skipped holes + partner out of sync
+  // Compute gap warnings: any hole either player should have but doesn't
   const gapWarnings = useMemo(() => {
     if (!activePlayer) return null
     const myScored = new Set(scores.filter(s => s.userId === activePlayer.id).map(s => s.holeNumber))
     const tmScored = teammate ? new Set(scores.filter(s => s.userId === teammate.id).map(s => s.holeNumber)) : null
-    const myMax = myScored.size ? Math.max(...myScored) : 0
-    const tmMax = tmScored?.size ? Math.max(...tmScored) : 0
+    const maxHole = Math.max(0, ...myScored, ...(tmScored ?? []))
+    if (maxHole === 0) return null
 
-    // My gaps: holes I skipped (before my highest)
-    const myGaps: number[] = []
-    for (let h = 1; h < myMax; h++) {
-      if (!myScored.has(h)) myGaps.push(h)
+    const myMissing: number[] = []
+    const tmMissing: number[] = []
+    for (let h = 1; h <= maxHole; h++) {
+      if (!myScored.has(h)) myMissing.push(h)
+      if (tmScored && !tmScored.has(h)) tmMissing.push(h)
     }
 
-    // Teammate gaps: holes they skipped (before their highest)
-    const tmGaps: number[] = []
-    if (tmScored) {
-      for (let h = 1; h < tmMax; h++) {
-        if (!tmScored.has(h)) tmGaps.push(h)
-      }
-    }
-
-    // Out of sync: holes I have that teammate doesn't, or vice versa
-    const syncGaps: number[] = []
-    if (tmScored) {
-      const allHoles = new Set([...myScored, ...tmScored])
-      for (const h of allHoles) {
-        if (myScored.has(h) !== tmScored.has(h)) syncGaps.push(h)
-      }
-      syncGaps.sort((a, b) => a - b)
-    }
-
-    if (!myGaps.length && !tmGaps.length && !syncGaps.length) return null
-    return { myGaps, tmGaps, syncGaps }
+    if (!myMissing.length && !tmMissing.length) return null
+    return { myMissing, tmMissing }
   }, [activePlayer, teammate, scores])
 
   const doSave = useCallback(async (gross: number, holeNum: number) => {
@@ -293,14 +276,11 @@ export function ScoringPage() {
         {/* Gap warnings */}
         {gapWarnings && (
           <div className={styles.gapWarning}>
-            {gapWarnings.myGaps.length > 0 && (
-              <div>You skipped: {gapWarnings.myGaps.join(', ')}</div>
+            {gapWarnings.myMissing.length > 0 && (
+              <div>You are missing: {gapWarnings.myMissing.join(', ')}</div>
             )}
-            {gapWarnings.tmGaps.length > 0 && teammate && (
-              <div>{teammate.name} skipped: {gapWarnings.tmGaps.join(', ')}</div>
-            )}
-            {gapWarnings.syncGaps.length > 0 && teammate && !gapWarnings.myGaps.length && !gapWarnings.tmGaps.length && (
-              <div>Out of sync with {teammate.name} on: {gapWarnings.syncGaps.join(', ')}</div>
+            {gapWarnings.tmMissing.length > 0 && teammate && (
+              <div>{teammate.name} is missing: {gapWarnings.tmMissing.join(', ')}</div>
             )}
           </div>
         )}
