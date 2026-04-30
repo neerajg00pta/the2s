@@ -277,11 +277,12 @@ export function ScoringPage() {
         {gapWarnings && (
           <div className={styles.gapWarning}>
             {gapWarnings.myMissing.length > 0 && (
-              <div>You are missing: {gapWarnings.myMissing.join(', ')}</div>
+              <span>You: missing {gapWarnings.myMissing.join(', ')}. </span>
             )}
             {gapWarnings.tmMissing.length > 0 && teammate && (
-              <div>{teammate.name} is missing: {gapWarnings.tmMissing.join(', ')}</div>
+              <span>{teammate.name}: missing {gapWarnings.tmMissing.join(', ')}. </span>
             )}
+            <span>Team scored through {myTeamRow?.thru ?? 0}.</span>
           </div>
         )}
 
