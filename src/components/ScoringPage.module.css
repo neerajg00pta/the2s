@@ -248,6 +248,7 @@
   font-weight: 600;
   color: var(--accent-danger);
   line-height: 1.5;
+  text-align: center;
 }
 
 /* Hole header */
