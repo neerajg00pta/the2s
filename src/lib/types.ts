@@ -4,6 +4,7 @@ export interface Config {
   doubleHole: number
   courseName: string
   tournamentName: string
+  spectatorToken: string
 }
 
 export interface User {

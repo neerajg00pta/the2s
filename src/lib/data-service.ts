@@ -25,6 +25,7 @@ export async function fetchAllData(): Promise<AllData> {
     doubleHole: raw.double_hole ?? 0,
     courseName: raw.course_name ?? '',
     tournamentName: raw.tournament_name ?? 'The 2s',
+    spectatorToken: raw.spectator_token ?? 'the2s',
   }
 
   const users: User[] = (usersRes.data ?? []).map((r: Record<string, unknown>) => ({

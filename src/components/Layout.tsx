@@ -6,7 +6,7 @@ import { useToast } from '../contexts/ToastContext'
 import styles from './Layout.module.css'
 
 export function Layout({ children }: { children: ReactNode }) {
-  const { currentUser, logout, isAdmin, activateAdmin, deactivateAdmin } = useAuth()
+  const { currentUser, isSpectator, logout, isAdmin, activateAdmin, deactivateAdmin } = useAuth()
   const { loading, config } = useData()
   const { addToast } = useToast()
   const location = useLocation()
@@ -57,6 +57,11 @@ export function Layout({ children }: { children: ReactNode }) {
                 onTouchEnd={() => { if (longPressRef.current) clearTimeout(longPressRef.current) }}
                 onTouchCancel={() => { if (longPressRef.current) clearTimeout(longPressRef.current) }}
               >{currentUser.fullName || currentUser.name}</span>
+              <button onClick={logout} className={styles.logoutBtn}>Log out</button>
+            </>
+          ) : isSpectator ? (
+            <>
+              <span className={styles.spectatorLabel}>Spectator</span>
               <button onClick={logout} className={styles.logoutBtn}>Log out</button>
             </>
           ) : (

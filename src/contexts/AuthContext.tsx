@@ -4,9 +4,11 @@ import { SESSION_COOKIE, ADMIN_COOKIE } from '../lib/config'
 import { useData } from './DataContext'
 
 const SESSION_EXPIRY_DAYS = 30
+const SPECTATOR_COOKIE = 'the2s_spectator'
 
 interface AuthState {
   currentUser: User | null
+  isSpectator: boolean
   login: (email: string) => boolean
   loginDirect: (user: User) => void
   logout: () => void
@@ -32,25 +34,34 @@ function deleteCookie(name: string) {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { users } = useData()
+  const { users, config } = useData()
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [isSpectator, setIsSpectator] = useState(() => getCookie(SPECTATOR_COOKIE) === '1')
   const [adminActivated, setAdminActivated] = useState(() => getCookie(ADMIN_COOKIE) === '1')
+
+  const spectatorToken = config.spectatorToken || 'the2s'
 
   const findByEmail = useCallback(
     (email: string) => users.find(u => u.email?.toLowerCase() === email.toLowerCase()) || null,
     [users]
   )
 
+  const isSpectatorToken = useCallback(
+    (input: string) => input.toLowerCase() === spectatorToken.toLowerCase(),
+    [spectatorToken]
+  )
+
   // Restore session from cookie
   useEffect(() => {
+    if (isSpectator || currentUser) return
     const savedEmail = getCookie(SESSION_COOKIE)
-    if (savedEmail && !currentUser) {
+    if (savedEmail) {
       const user = findByEmail(savedEmail)
       if (user) setCurrentUser(user)
     }
-  }, [users, currentUser, findByEmail])
+  }, [users, currentUser, isSpectator, findByEmail])
 
-  // Keep currentUser in sync with users array (e.g. pops changed by admin)
+  // Keep currentUser in sync with users array
   useEffect(() => {
     if (currentUser) {
       const fresh = users.find(u => u.id === currentUser.id)
@@ -60,35 +71,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [users, currentUser])
 
-  // Auto-login via URL param (?token=email, HashRouter compat)
+  // Auto-login via URL param (?token=email or ?token=spectator_token)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search || window.location.hash.split('?')[1] || '')
     const token = params.get('token')
-    if (token && !currentUser) {
-      const user = findByEmail(token)
-      if (user) {
-        setCurrentUser(user)
-        setCookie(SESSION_COOKIE, token, SESSION_EXPIRY_DAYS)
+    if (token && !currentUser && !isSpectator) {
+      const cleanUrl = () => {
         const url = new URL(window.location.href)
         url.searchParams.delete('token')
         window.history.replaceState({}, '', url.toString())
       }
+
+      if (isSpectatorToken(token)) {
+        setIsSpectator(true)
+        setCookie(SPECTATOR_COOKIE, '1', SESSION_EXPIRY_DAYS)
+        cleanUrl()
+      } else {
+        const user = findByEmail(token)
+        if (user) {
+          setCurrentUser(user)
+          setCookie(SESSION_COOKIE, token, SESSION_EXPIRY_DAYS)
+          cleanUrl()
+        }
+      }
     }
-  }, [users, currentUser, findByEmail])
+  }, [users, currentUser, isSpectator, findByEmail, isSpectatorToken])
 
   const login = useCallback(
-    (email: string) => {
-      const user = findByEmail(email)
+    (input: string) => {
+      // Check spectator token first
+      if (isSpectatorToken(input)) {
+        setIsSpectator(true)
+        setCookie(SPECTATOR_COOKIE, '1', SESSION_EXPIRY_DAYS)
+        return true
+      }
+      const user = findByEmail(input)
       if (user) {
         setCurrentUser(user)
-        setCookie(SESSION_COOKIE, email, SESSION_EXPIRY_DAYS)
+        setCookie(SESSION_COOKIE, input, SESSION_EXPIRY_DAYS)
         setAdminActivated(false)
         deleteCookie(ADMIN_COOKIE)
         return true
       }
       return false
     },
-    [findByEmail]
+    [findByEmail, isSpectatorToken]
   )
 
   const loginDirect = useCallback((user: User) => {
@@ -98,9 +125,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     setCurrentUser(null)
+    setIsSpectator(false)
     setAdminActivated(false)
     deleteCookie(SESSION_COOKIE)
     deleteCookie(ADMIN_COOKIE)
+    deleteCookie(SPECTATOR_COOKIE)
   }, [])
 
   const activateAdmin = useCallback(() => {
@@ -120,7 +149,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = !!(currentUser?.admin && adminActivated)
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, loginDirect, logout, isAdmin, activateAdmin, deactivateAdmin }}>
+    <AuthContext.Provider value={{ currentUser, isSpectator, login, loginDirect, logout, isAdmin, activateAdmin, deactivateAdmin }}>
       {children}
     </AuthContext.Provider>
   )

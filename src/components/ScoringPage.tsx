@@ -19,7 +19,7 @@ function netScoreWord(net: number): string {
 }
 
 export function ScoringPage() {
-  const { currentUser, isAdmin } = useAuth()
+  const { currentUser, isAdmin, isSpectator } = useAuth()
   const { users, teams, holes, scores, refresh } = useData()
   const { addToast } = useToast()
   const [currentHole, setCurrentHole] = useState(1)
@@ -201,7 +201,7 @@ export function ScoringPage() {
   }
 
 
-  if (!currentUser) {
+  if (!currentUser && !isSpectator) {
     return <LoginPage />
   }
 
@@ -221,17 +221,19 @@ export function ScoringPage() {
     <div className={styles.page}>
       {/* Big 3 numbers */}
       <div className={styles.scoreboard}>
-        <div className={styles.scoreboardItem}>
-          <div className={styles.scoreboardValue}>{playerTotals?.totalPoints ?? 0}</div>
-          <div
-            className={`${styles.scoreboardLabel} ${teammate ? styles.scoreboardLabelTap : ''}`}
-            onClick={() => {
-              if (!teammate) return
-              if (isViewingOther) setSelectedPlayerId(null)
-              else setSelectedPlayerId(teammate.id)
-            }}
-          >{isViewingOther ? activePlayer?.name : 'Me'}</div>
-        </div>
+        {!isSpectator && (
+          <div className={styles.scoreboardItem}>
+            <div className={styles.scoreboardValue}>{playerTotals?.totalPoints ?? 0}</div>
+            <div
+              className={`${styles.scoreboardLabel} ${teammate ? styles.scoreboardLabelTap : ''}`}
+              onClick={() => {
+                if (!teammate) return
+                if (isViewingOther) setSelectedPlayerId(null)
+                else setSelectedPlayerId(teammate.id)
+              }}
+            >{isViewingOther ? activePlayer?.name : 'Me'}</div>
+          </div>
+        )}
         <div className={`${styles.scoreboardItem} ${styles.scoreboardTeam}`}>
           <div className={styles.scoreboardValue}>{teamTotal}</div>
           <div className={styles.scoreboardLabel}>Team</div>
@@ -242,8 +244,8 @@ export function ScoringPage() {
         </div>
       </div>
 
-      {/* Viewing banner — anytime viewing someone else */}
-      {isViewingOther && (
+      {/* Viewing banner — anytime viewing someone else (not spectator) */}
+      {isViewingOther && !isSpectator && (
         <div className={styles.viewingBanner}>
           <div className={styles.viewingText}>
             Viewing: <strong>{activePlayer?.name}</strong>
@@ -274,7 +276,7 @@ export function ScoringPage() {
       {/* Scorecard */}
       <div className={`${styles.scorecard} ${isViewingOther ? styles.scorecardOther : ''}`}>
         {/* Gap warnings */}
-        {gapWarnings && (
+        {gapWarnings && !isSpectator && (
           <div className={styles.gapWarning}>
             {gapWarnings.myMissing.length > 0 && (
               <span>You: missing {gapWarnings.myMissing.join(', ')}. </span>
@@ -302,21 +304,23 @@ export function ScoringPage() {
           <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
         </div>
 
-        {/* Score input */}
-        <div className={styles.scoreInput}>
-          <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>
-            &minus;
-          </button>
-          <div
-            className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
-            onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
-          >
-            {displayScore}
+        {/* Score input — hidden for spectators */}
+        {!isSpectator && (
+          <div className={styles.scoreInput}>
+            <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>
+              &minus;
+            </button>
+            <div
+              className={`${styles.scoreValue} ${saving ? styles.scoreSaving : ''} ${hasPendingEdit ? styles.scorePending : ''} ${!hasBeenSaved && !hasPendingEdit ? styles.scoreGhost : ''}`}
+              onClick={!hasBeenSaved && !hasPendingEdit ? lockIn : undefined}
+            >
+              {displayScore}
+            </div>
+            <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>
+              +
+            </button>
           </div>
-          <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>
-            +
-          </button>
-        </div>
+        )}
 
         {/* Result line */}
         <div className={styles.resultLine}>
