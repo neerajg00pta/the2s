@@ -50,6 +50,15 @@ export function Rules() {
       </section>
 
       <section className={styles.section}>
+        <h3>Special Holes</h3>
+        <ul>
+          <li><strong>IIIs</strong> — 2 of the hardest 6 holes will be played from the III tees.</li>
+          <li><strong>Tips</strong> — 2 of the easiest 6 holes will be played from the Tips.</li>
+        </ul>
+        <p>These don't affect scoring — just where you tee off.</p>
+      </section>
+
+      <section className={styles.section}>
         <h3>Team Scoring</h3>
         <p>Teams of 2 players. The <strong>team score</strong> is the sum of both players' individual points across all 18 holes.</p>
       </section>
