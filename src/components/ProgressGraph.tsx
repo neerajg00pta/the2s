@@ -55,16 +55,19 @@ export function ProgressGraph() {
 
   // Outside click → revert to default
   useEffect(() => {
-    const handler = (e: TouchEvent | MouseEvent) => {
+    const handler = (e: Event) => {
       if (chartRef.current && !chartRef.current.contains(e.target as Node)) {
         setActiveHole(null)
       }
     }
-    document.addEventListener('touchstart', handler, { passive: true })
-    document.addEventListener('mousedown', handler)
+    const scrollReset = () => setActiveHole(null)
+    document.addEventListener('click', handler, true)
+    document.addEventListener('touchend', handler, true)
+    window.addEventListener('scroll', scrollReset, { passive: true })
     return () => {
-      document.removeEventListener('touchstart', handler)
-      document.removeEventListener('mousedown', handler)
+      document.removeEventListener('click', handler, true)
+      document.removeEventListener('touchend', handler, true)
+      window.removeEventListener('scroll', scrollReset)
     }
   }, [])
 
