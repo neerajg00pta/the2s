@@ -75,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search || window.location.hash.split('?')[1] || '')
     const token = params.get('token')
-    if (token && !currentUser && !isSpectator) {
+    if (token && !isSpectator) {
       const cleanUrl = () => {
         const url = new URL(window.location.href)
         url.searchParams.delete('token')
@@ -83,10 +83,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (isSpectatorToken(token)) {
+        setCurrentUser(null)
+        setAdminActivated(false)
+        deleteCookie(SESSION_COOKIE)
+        deleteCookie(ADMIN_COOKIE)
         setIsSpectator(true)
         setCookie(SPECTATOR_COOKIE, '1', SESSION_EXPIRY_DAYS)
         cleanUrl()
-      } else {
+      } else if (!currentUser) {
         const user = findByEmail(token)
         if (user) {
           setCurrentUser(user)
