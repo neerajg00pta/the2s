@@ -201,8 +201,22 @@ export function ScoringPage() {
   }
 
 
+  // Individual leaderboard (needed by both player and spectator views)
+  const playerRows = buildIndividualLeaderboard(teams, users, scores, holes, getDoubleHole(holes))
+
   if (!currentUser && !isSpectator) {
     return <LoginPage />
+  }
+
+  // Spectator: just ticker + leaderboards + graph
+  if (isSpectator) {
+    return (
+      <div className={styles.page}>
+        <LatestTicker />
+        <Leaderboard teamRows={teamRows} playerRows={playerRows} />
+        <ProgressGraph />
+      </div>
+    )
   }
 
   if (!hole) {
@@ -214,26 +228,21 @@ export function ScoringPage() {
   const liveNetScore = getNetScore(displayScore, hole.par, strokesOnHole)
   const livePoints = getPoints(liveNetScore, isDoubleHole)
 
-  // Individual leaderboard
-  const playerRows = buildIndividualLeaderboard(teams, users, scores, holes, getDoubleHole(holes))
-
   return (
     <div className={styles.page}>
       {/* Big 3 numbers */}
       <div className={styles.scoreboard}>
-        {!isSpectator && (
-          <div className={styles.scoreboardItem}>
-            <div className={styles.scoreboardValue}>{playerTotals?.totalPoints ?? 0}</div>
-            <div
-              className={`${styles.scoreboardLabel} ${teammate ? styles.scoreboardLabelTap : ''}`}
-              onClick={() => {
-                if (!teammate) return
-                if (isViewingOther) setSelectedPlayerId(null)
-                else setSelectedPlayerId(teammate.id)
-              }}
-            >{isViewingOther ? activePlayer?.name : 'Me'}</div>
-          </div>
-        )}
+        <div className={styles.scoreboardItem}>
+          <div className={styles.scoreboardValue}>{playerTotals?.totalPoints ?? 0}</div>
+          <div
+            className={`${styles.scoreboardLabel} ${teammate ? styles.scoreboardLabelTap : ''}`}
+            onClick={() => {
+              if (!teammate) return
+              if (isViewingOther) setSelectedPlayerId(null)
+              else setSelectedPlayerId(teammate.id)
+            }}
+          >{isViewingOther ? activePlayer?.name : 'Me'}</div>
+        </div>
         <div className={`${styles.scoreboardItem} ${styles.scoreboardTeam}`}>
           <div className={styles.scoreboardValue}>{teamTotal}</div>
           <div className={styles.scoreboardLabel}>Team</div>
@@ -244,8 +253,8 @@ export function ScoringPage() {
         </div>
       </div>
 
-      {/* Viewing banner — anytime viewing someone else (not spectator) */}
-      {isViewingOther && !isSpectator && (
+      {/* Viewing banner — anytime viewing someone else */}
+      {isViewingOther && (
         <div className={styles.viewingBanner}>
           <div className={styles.viewingText}>
             Viewing: <strong>{activePlayer?.name}</strong>
@@ -276,7 +285,7 @@ export function ScoringPage() {
       {/* Scorecard */}
       <div className={`${styles.scorecard} ${isViewingOther ? styles.scorecardOther : ''}`}>
         {/* Gap warnings */}
-        {gapWarnings && !isSpectator && (
+        {gapWarnings && (
           <div className={styles.gapWarning}>
             {gapWarnings.myMissing.length > 0 && (
               <span>You: missing {gapWarnings.myMissing.join(', ')}. </span>
@@ -304,9 +313,8 @@ export function ScoringPage() {
           <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
         </div>
 
-        {/* Score input — hidden for spectators */}
-        {!isSpectator && (
-          <div className={styles.scoreInput}>
+        {/* Score input */}
+        <div className={styles.scoreInput}>
             <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>
               &minus;
             </button>
@@ -320,7 +328,6 @@ export function ScoringPage() {
               +
             </button>
           </div>
-        )}
 
         {/* Result line */}
         <div className={styles.resultLine}>

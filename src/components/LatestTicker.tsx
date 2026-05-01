@@ -20,7 +20,7 @@ export function LatestTicker() {
   const { users, teams, holes, scores } = useData()
 
   const items = useMemo(() => {
-    if (!teams.length || !scores.length || !holes.length) return []
+    if (!teams.length || !holes.length) return []
 
     const holeMap = new Map(holes.map(h => [h.number, h]))
     const teamRows = buildTeamLeaderboard(teams, users, scores, holes, getDoubleHole(holes))
@@ -49,7 +49,11 @@ export function LatestTicker() {
         }
       }
 
-      if (!latestHole) continue
+      if (!latestHole) {
+        // No scores yet — still show team in ticker
+        result.push({ rank: rank + 1, teamLabel, points: 0, holeNumber: 0 })
+        continue
+      }
       const hole = holeMap.get(latestHole)
       if (!hole) continue
 
@@ -118,9 +122,9 @@ export function LatestTicker() {
               <span className={styles.rank}>{item.rank}.</span>
               <span className={styles.team}>{item.teamLabel}</span>
               {' '}
-              <span className={styles.pts}>+{item.points}</span>
+              {item.holeNumber > 0 && <span className={styles.pts}>+{item.points}</span>}
               {' '}
-              <span className={styles.hole}>@{item.holeNumber}</span>
+              {item.holeNumber > 0 && <span className={styles.hole}>@{item.holeNumber}</span>}
               <span className={styles.sep}>|</span>
             </span>
           ))}

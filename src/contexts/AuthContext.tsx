@@ -99,12 +99,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     (input: string) => {
-      // Check spectator token first
-      if (isSpectatorToken(input)) {
-        setIsSpectator(true)
-        setCookie(SPECTATOR_COOKIE, '1', SESSION_EXPIRY_DAYS)
-        return true
-      }
       const user = findByEmail(input)
       if (user) {
         setCurrentUser(user)
@@ -115,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       return false
     },
-    [findByEmail, isSpectatorToken]
+    [findByEmail]
   )
 
   const loginDirect = useCallback((user: User) => {

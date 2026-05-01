@@ -23,7 +23,7 @@ const DEFAULT_CONFIG: Config = {
   doubleHole: 0,
   courseName: '',
   tournamentName: 'The 2s',
-  spectatorToken: 'the2s',
+  spectatorToken: 'spectator',
 }
 
 export function DataProvider({ children }: { children: ReactNode }) {
