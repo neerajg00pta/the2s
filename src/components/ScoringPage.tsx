@@ -331,9 +331,9 @@ export function ScoringPage() {
                 : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
                 : <span className={styles.saveIndicator}>✓</span>}
             </>
-          ) : (
+          ) : !isSpectator ? (
             <span className={styles.ghostHint}>Tap score to lock in par</span>
-          )}
+          ) : null}
         </div>
         {isAdmin && hasBeenSaved && (
           <div className={styles.clearRow}>
