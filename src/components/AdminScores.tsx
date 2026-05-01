@@ -80,12 +80,27 @@ export function AdminScores() {
         className={styles.playerSelect}
       >
         <option value="">Select player...</option>
-        {users.filter(u => u.teamId).sort((a, b) => a.name.localeCompare(b.name)).map(u => (
+        {[...users].sort((a, b) => a.name.localeCompare(b.name)).map(u => (
           <option key={u.id} value={u.id}>{u.fullName || u.name} ({u.pops} pops)</option>
         ))}
       </select>
 
       {player && (
+        <>
+        <div className={styles.playerHeader}>
+          <span className={styles.playerName}>{player.fullName || player.name} — {player.pops} pops</span>
+          <button className={styles.clearPlayerBtn} disabled={saving !== null} onClick={async () => {
+            if (!confirm(`Clear all scores for ${player.name}?`)) return
+            setSaving(-1)
+            try {
+              const { supabase } = await import('../lib/supabase')
+              await supabase.from('the2s_scores').delete().eq('user_id', player.id)
+              await refresh()
+              addToast(`${player.name} scores cleared`, 'success')
+            } catch { addToast('Clear failed', 'error') }
+            finally { setSaving(null) }
+          }}>Clear {player.name}</button>
+        </div>
         <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead>
@@ -158,6 +173,7 @@ export function AdminScores() {
             </tfoot>
           </table>
         </div>
+        </>
       )}
     </div>
   )

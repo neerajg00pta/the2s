@@ -44,6 +44,30 @@
   width: 100%;
 }
 
+.playerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.playerName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.clearPlayerBtn {
+  font-size: 11px;
+  color: var(--accent-danger);
+  padding: 3px 8px;
+  border: 1px solid var(--accent-danger);
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.clearPlayerBtn:hover { opacity: 1; }
+.clearPlayerBtn:disabled { opacity: 0.3; }
+
 .tableWrap {
   overflow-x: auto;
   border: 1px solid var(--border);
