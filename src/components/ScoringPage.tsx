@@ -389,10 +389,10 @@ function LoginPage() {
       <img src={`${import.meta.env.BASE_URL}favicon.png`} alt="" className={styles.loginIcon} />
       <form onSubmit={handleSubmit} className={styles.loginForm}>
         <input
-          type="email"
+          type="text"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          placeholder="Enter your email"
+          placeholder="Email or code"
           className={`${styles.loginInput} ${error ? styles.loginInputError : ''}`}
         />
         <button type="submit" className={styles.loginBtn}>Go</button>

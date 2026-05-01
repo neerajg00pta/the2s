@@ -116,6 +116,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     (input: string) => {
+      if (isSpectatorToken(input)) {
+        setCurrentUser(null)
+        setAdminActivated(false)
+        deleteCookie(SESSION_COOKIE)
+        deleteCookie(ADMIN_COOKIE)
+        setIsSpectator(true)
+        setCookie(SPECTATOR_COOKIE, '1', SESSION_EXPIRY_DAYS)
+        return true
+      }
       const user = findByEmail(input)
       if (user) {
         setCurrentUser(user)
@@ -126,7 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       return false
     },
-    [findByEmail]
+    [findByEmail, isSpectatorToken]
   )
 
   const loginDirect = useCallback((user: User) => {
