@@ -323,6 +323,7 @@ export function ScoringPage() {
         <div className={styles.resultLine}>
           {hasBeenSaved || hasPendingEdit ? (
             <>
+              {!isSpectator && <button className={styles.trashBtn} onClick={clearScore} disabled={saving}>🗑</button>}
               <span className={styles.resultNet}>Net</span>
               <span className={styles.resultName}>{netScoreWord(liveNetScore)}</span>
               <span className={styles.resultArrow}>⇒</span>
@@ -330,7 +331,6 @@ export function ScoringPage() {
               {saving ? <span className={styles.saveIndicator}>saving...</span>
                 : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
                 : <span className={styles.saveIndicator}>✓</span>}
-              {!isSpectator && <button className={styles.trashBtn} onClick={clearScore} disabled={saving}>🗑</button>}
             </>
           ) : !isSpectator ? (
             <span className={styles.ghostHint}>Tap score to lock in par</span>
