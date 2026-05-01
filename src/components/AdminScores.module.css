@@ -1,0 +1,136 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.denied {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-muted);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.clearAllBtn {
+  font-size: 12px;
+  color: var(--accent-danger);
+  padding: 4px 10px;
+  border: 1px solid var(--accent-danger);
+  border-radius: var(--radius);
+  opacity: 0.7;
+}
+
+.clearAllBtn:hover { opacity: 1; }
+.clearAllBtn:disabled { opacity: 0.3; }
+
+.playerSelect {
+  padding: 8px 12px;
+  font-size: 15px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  padding: 6px 8px;
+  background: var(--bg-elevated);
+  color: var(--accent-gold);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 4px 6px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.holeNum {
+  font-weight: 600;
+  text-align: left !important;
+  padding-left: 10px !important;
+}
+
+.desig_2x { color: var(--accent-gold); font-size: 10px; font-weight: 700; }
+.desig_iii { color: var(--accent-blue); font-size: 10px; font-weight: 700; }
+.desig_tips { color: #ab47bc; font-size: 10px; font-weight: 700; }
+
+.popsActive {
+  color: var(--accent-green-light);
+  font-weight: 600;
+}
+
+.popsMuted {
+  color: var(--text-muted);
+}
+
+.scoreInput {
+  width: 44px;
+  padding: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.scoreInput:focus {
+  border-color: var(--accent-green);
+}
+
+.netGood { color: var(--accent-green-light); }
+.netBad { color: var(--accent-danger); }
+.ptsGood { color: var(--accent-gold); font-weight: 700; }
+.empty { color: var(--text-muted); }
+
+.rowSaving { opacity: 0.5; }
+
+.rowDouble {
+  background: rgba(255, 215, 0, 0.06);
+}
+
+.totalRow {
+  background: var(--bg-elevated);
+  font-weight: 700;
+}
+
+.totalRow td {
+  padding: 8px 6px;
+  border-top: 2px solid var(--border);
+}

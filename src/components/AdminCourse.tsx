@@ -61,8 +61,9 @@ export function AdminCourse() {
   const doubleHole = sortedHoles.find(h => h.designation === '2x')
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${config.poolLocked ? styles.containerLocked : ''}`}>
       <h2 className={styles.title}>Course Setup</h2>
+      {config.poolLocked && <p className={styles.lockNote}>Course is locked. Unlock tournament to edit.</p>}
       <p className={styles.subtitle}>{config.courseName || 'Set course name in config'}</p>
 
       <div className={styles.tableWrap}>

@@ -111,10 +111,11 @@ export function AdminPanel() {
         <button className={`${styles.lockBtn} ${config.poolLocked ? styles.locked : ''}`} onClick={handleToggleLock}>
           {config.poolLocked ? '🔒 Tournament Locked' : '🔓 Lock Tournament'}
         </button>
+        {config.poolLocked && <p className={styles.lockNote}>Teams, players, and course are locked. Scores can still be entered.</p>}
       </div>
 
-      {/* Teams */}
-      <section className={styles.section}>
+      {/* Teams — disabled when locked */}
+      <section className={`${styles.section} ${config.poolLocked ? styles.sectionLocked : ''}`}>
         <h3>Teams ({teams.length})</h3>
         {teams.map(team => {
           const members = users.filter(u => u.teamId === team.id)
@@ -177,8 +178,8 @@ export function AdminPanel() {
         </div>
       </section>
 
-      {/* Players — editable table */}
-      <section className={styles.section}>
+      {/* Players — disabled when locked */}
+      <section className={`${styles.section} ${config.poolLocked ? styles.sectionLocked : ''}`}>
         <h3>Players ({users.length})</h3>
         <div className={styles.tableWrap}>
           <table className={styles.table}>

@@ -69,6 +69,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <nav className={styles.adminBar}>
           <Link to="/admin" className={`${styles.adminLink} ${isActive('/admin') ? styles.adminLinkActive : ''}`}>Admin</Link>
           <Link to="/admin/course" className={`${styles.adminLink} ${isActive('/admin/course') ? styles.adminLinkActive : ''}`}>Course</Link>
+          <Link to="/admin/scores" className={`${styles.adminLink} ${isActive('/admin/scores') ? styles.adminLinkActive : ''}`}>Scores</Link>
           <button className={styles.exitAdminBtn} onClick={() => { deactivateAdmin(); addToast('Player mode', 'success') }}>
             Exit Admin
           </button>
