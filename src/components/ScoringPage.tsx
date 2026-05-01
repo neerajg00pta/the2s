@@ -330,16 +330,12 @@ export function ScoringPage() {
               {saving ? <span className={styles.saveIndicator}>saving...</span>
                 : hasPendingEdit ? <span className={styles.saveIndicator}>unsaved</span>
                 : <span className={styles.saveIndicator}>✓</span>}
+              {!isSpectator && <button className={styles.trashBtn} onClick={clearScore} disabled={saving}>🗑</button>}
             </>
           ) : !isSpectator ? (
             <span className={styles.ghostHint}>Tap score to lock in par</span>
           ) : null}
         </div>
-        {!isSpectator && hasBeenSaved && (
-          <div className={styles.clearRow}>
-            <button className={styles.clearBtn} onClick={clearScore} disabled={saving}>Clear Score</button>
-          </div>
-        )}
 
         {/* Hole picker — toggled by clicking Hole # */}
         {showHolePicker && (

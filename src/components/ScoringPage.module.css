@@ -439,27 +439,16 @@
   opacity: 0.5;
 }
 
-.clearRow {
-  display: flex;
-  justify-content: center;
+.trashBtn {
+  font-size: 14px;
+  padding: 2px 4px;
+  opacity: 0.35;
+  margin-left: 4px;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.clearBtn {
-  font-size: 11px;
-  color: var(--accent-danger);
-  padding: 2px 8px;
-  border: 1px solid var(--accent-danger);
-  border-radius: 4px;
-  opacity: 0.7;
-}
-
-.clearBtn:hover {
-  opacity: 1;
-}
-
-.clearBtn:disabled {
-  opacity: 0.3;
-}
+.trashBtn:active:not(:disabled) { opacity: 0.8; }
+.trashBtn:disabled { opacity: 0.15; }
 
 
 .navBtn:active:not(:disabled) {

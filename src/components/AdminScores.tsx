@@ -140,14 +140,14 @@ export function AdminScores() {
                     <td className={strokes > 0 ? styles.popsActive : styles.popsMuted}>{strokes}</td>
                     <td>
                       <input
+                        key={`${selectedUserId}-${h.number}-${gross}`}
                         type="number"
                         min={1}
                         max={15}
-                        value={gross ?? ''}
+                        defaultValue={gross ?? ''}
                         placeholder="—"
                         className={styles.scoreInput}
                         onBlur={e => handleScoreChange(h.number, e.target.value)}
-                        onChange={() => {/* controlled by onBlur */}}
                         onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
                       />
                     </td>
