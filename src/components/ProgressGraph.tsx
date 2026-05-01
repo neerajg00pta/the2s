@@ -62,7 +62,7 @@ export function ProgressGraph() {
     <div className={styles.container}>
       <div className={styles.chartWrap}>
         <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={data} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
+          <LineChart data={data} margin={{ top: 5, right: 8, left: 8, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="hole"
@@ -71,7 +71,8 @@ export function ProgressGraph() {
             />
             <YAxis
               stroke="var(--text-muted)"
-              tick={{ fontSize: 12, fill: 'var(--text-secondary)' }}
+              tick={false}
+              width={1}
               domain={[0, Math.ceil((maxPoints + 5) / 5) * 5]}
             />
             <Tooltip
