@@ -208,16 +208,6 @@ export function ScoringPage() {
     return <LoginPage />
   }
 
-  // Spectator: just ticker + leaderboards + graph
-  if (isSpectator) {
-    return (
-      <div className={styles.page}>
-        <LatestTicker />
-        <Leaderboard teamRows={teamRows} playerRows={playerRows} />
-        <ProgressGraph />
-      </div>
-    )
-  }
 
   if (!hole) {
     return <div className={styles.loginPrompt}><p>Course not set up yet.</p></div>
@@ -230,8 +220,8 @@ export function ScoringPage() {
 
   return (
     <div className={styles.page}>
-      {/* Big 3 numbers */}
-      <div className={styles.scoreboard}>
+      {/* Big 3 numbers — hidden for spectators */}
+      {!isSpectator && <div className={styles.scoreboard}>
         <div className={styles.scoreboardItem}>
           <div className={styles.scoreboardValue}>{playerTotals?.totalPoints ?? 0}</div>
           <div
@@ -251,7 +241,7 @@ export function ScoringPage() {
           <div className={styles.scoreboardValue}>{leaderPoints}</div>
           <div className={styles.scoreboardLabel}>Leader</div>
         </div>
-      </div>
+      </div>}
 
       {/* Viewing banner — anytime viewing someone else */}
       {isViewingOther && (
@@ -313,8 +303,8 @@ export function ScoringPage() {
           <button className={`${styles.holeArrow} ${currentHole >= 18 ? styles.holeArrowHidden : ''}`} onClick={() => navigate(1)}>▶</button>
         </div>
 
-        {/* Score input */}
-        <div className={styles.scoreInput}>
+        {/* Score input — hidden for spectators */}
+        {!isSpectator && <div className={styles.scoreInput}>
             <button className={styles.scoreBtn} onClick={() => changeScore(-1)} disabled={displayScore <= 1 || saving}>
               &minus;
             </button>
@@ -327,7 +317,7 @@ export function ScoringPage() {
             <button className={styles.scoreBtn} onClick={() => changeScore(1)} disabled={displayScore >= 15 || saving}>
               +
             </button>
-          </div>
+          </div>}
 
         {/* Result line */}
         <div className={styles.resultLine}>
