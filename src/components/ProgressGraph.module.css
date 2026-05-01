@@ -19,6 +19,36 @@
   padding: 8px 0 8px 0;
 }
 
+.infoPanel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  min-height: 16px;
+  padding: 4px 8px;
+}
+
+.infoLabel {
+  color: var(--text-muted);
+}
+
+.infoEntry {
+  display: inline-flex;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.infoValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.infoSep {
+  color: var(--border-light);
+  margin: 0 2px;
+}
+
 .legend {
   display: flex;
   flex-wrap: wrap;

@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useData } from '../contexts/DataContext'
-import { buildProgressionData, getDoubleHole, TEAM_COLORS } from '../lib/scoring'
+import { buildProgressionData, buildTeamLeaderboard, getDoubleHole, TEAM_COLORS } from '../lib/scoring'
 import styles from './ProgressGraph.module.css'
 
 function playerInitials(fullName: string): string {
@@ -12,21 +12,28 @@ function playerInitials(fullName: string): string {
 
 export function ProgressGraph() {
   const { users, teams, holes, scores } = useData()
+  const [activeHole, setActiveHole] = useState<number | null>(null)
+  const chartRef = useRef<HTMLDivElement>(null)
+
+  const doubleHole = getDoubleHole(holes)
 
   const data = useMemo(
-    () => buildProgressionData(teams, users, scores, holes, getDoubleHole(holes)),
-    [teams, users, scores, holes]
+    () => buildProgressionData(teams, users, scores, holes, doubleHole),
+    [teams, users, scores, holes, doubleHole]
+  )
+
+  const teamRows = useMemo(
+    () => buildTeamLeaderboard(teams, users, scores, holes, doubleHole),
+    [teams, users, scores, holes, doubleHole]
   )
 
   const teamNames = useMemo(() => teams.map(t => t.name), [teams])
 
-  // Build team initials and last names maps
   const teamInitials = useMemo(() => {
     const map = new Map<string, string>()
     for (const team of teams) {
       const members = users.filter(u => u.teamId === team.id)
-      const initials = members.map(m => playerInitials(m.fullName || m.name)).join('/')
-      map.set(team.name, initials)
+      map.set(team.name, members.map(m => playerInitials(m.fullName || m.name)).join('/'))
     }
     return map
   }, [teams, users])
@@ -35,19 +42,60 @@ export function ProgressGraph() {
     const map = new Map<string, string>()
     for (const team of teams) {
       const members = users.filter(u => u.teamId === team.id)
-      const names = members.map(m => m.name).join('/')
-      map.set(team.name, names)
+      map.set(team.name, members.map(m => m.name).join('/'))
     }
     return map
   }, [teams, users])
 
+  const colorMap = useMemo(() => {
+    const map = new Map<string, string>()
+    teamNames.forEach((name, i) => map.set(name, TEAM_COLORS[i % TEAM_COLORS.length]))
+    return map
+  }, [teamNames])
+
+  // Outside click → revert to default
+  useEffect(() => {
+    const handler = (e: TouchEvent | MouseEvent) => {
+      if (chartRef.current && !chartRef.current.contains(e.target as Node)) {
+        setActiveHole(null)
+      }
+    }
+    document.addEventListener('touchstart', handler, { passive: true })
+    document.addEventListener('mousedown', handler)
+    return () => {
+      document.removeEventListener('touchstart', handler)
+      document.removeEventListener('mousedown', handler)
+    }
+  }, [])
+
+  // Build info panel content
+  const infoContent = useMemo(() => {
+    if (activeHole !== null) {
+      // Show scores at specific hole
+      const point = data.find(d => d.hole === activeHole)
+      if (!point) return null
+      const entries = teamNames
+        .map(name => ({ name, value: point[name], color: colorMap.get(name) ?? '#fff' }))
+        .filter(e => typeof e.value === 'number' && e.value !== null)
+        .sort((a, b) => (b.value as number) - (a.value as number))
+      return { label: `Hole ${activeHole}`, entries: entries.map(e => ({ initials: teamInitials.get(e.name) ?? '', value: e.value as number, color: e.color })) }
+    } else {
+      // Default: show team totals + thru (like ticker)
+      const entries = teamRows
+        .map(r => ({ initials: teamInitials.get(r.teamName) ?? '', total: r.totalPoints, thru: r.thru, color: colorMap.get(r.teamName) ?? '#fff' }))
+      return { label: null, entries: entries.map(e => ({ initials: e.initials, value: e.total, thru: e.thru, color: e.color })) }
+    }
+  }, [activeHole, data, teamNames, teamRows, teamInitials, colorMap])
+
+  const onTooltipActive = useCallback((_active: boolean, payload: Array<Record<string, unknown>> | undefined) => {
+    if (payload?.length) {
+      const hole = (payload[0] as Record<string, unknown>).payload as Record<string, unknown>
+      if (typeof hole?.hole === 'number') setActiveHole(hole.hole)
+    }
+  }, [])
 
   if (teams.length === 0) {
-    return (
-      <div className={styles.empty}>
-        <p>No teams created yet</p>
-      </div>
-    )
+    return <div className={styles.empty}><p>No teams created yet</p></div>
   }
 
   const maxPoints = data.reduce((max, point) => {
@@ -60,9 +108,27 @@ export function ProgressGraph() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.chartWrap}>
-        <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={data} margin={{ top: 5, right: 8, left: 8, bottom: 0 }}>
+      {/* Always-visible info panel */}
+      <div className={styles.infoPanel}>
+        {infoContent && (
+          <>
+            {infoContent.label && <span className={styles.infoLabel}>{infoContent.label}: </span>}
+            {infoContent.entries.map((e, i) => (
+              <span key={i} className={styles.infoEntry}>
+                <span style={{ color: e.color }}>{e.initials}</span>
+                <span style={{ color: e.color }} className={styles.infoValue}>
+                  {e.value}{'thru' in e && (e as { thru?: number }).thru !== undefined ? ` @${(e as { thru?: number }).thru}` : ''}
+                </span>
+                {i < infoContent.entries.length - 1 && <span className={styles.infoSep}>|</span>}
+              </span>
+            ))}
+          </>
+        )}
+      </div>
+
+      <div className={styles.chartWrap} ref={chartRef}>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={data} margin={{ top: 5, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="hole"
@@ -71,28 +137,15 @@ export function ProgressGraph() {
             />
             <YAxis
               stroke="var(--text-muted)"
-              tick={false}
-              width={1}
+              tick={{ fontSize: 10, fill: 'var(--text-muted)' }}
+              width={25}
               domain={[0, Math.ceil((maxPoints + 5) / 5) * 5]}
             />
             <Tooltip
               content={({ active, payload }) => {
-                if (!active || !payload?.length) return null
-                const entries = payload
-                  .filter(p => p.value !== null && p.value !== undefined)
-                  .map(p => ({ name: p.dataKey as string, value: p.value as number, color: p.color ?? '#fff' }))
-                  .sort((a, b) => b.value - a.value)
-                return (
-                  <div className={styles.tooltip}>
-                    {entries.map(e => (
-                      <div key={e.name} style={{ color: e.color }}>
-                        {teamInitials.get(e.name) ?? e.name}: {e.value}
-                      </div>
-                    ))}
-                  </div>
-                )
+                if (active && payload?.length) onTooltipActive(true, payload as unknown as Array<Record<string, unknown>>)
+                return null
               }}
-              position={{ x: 35, y: 8 }}
               cursor={{ stroke: 'var(--text-muted)', strokeWidth: 1 }}
             />
             {teamNames.map((name, i) => (
