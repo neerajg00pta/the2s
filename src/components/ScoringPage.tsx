@@ -335,7 +335,7 @@ export function ScoringPage() {
             <span className={styles.ghostHint}>Tap score to lock in par</span>
           ) : null}
         </div>
-        {isAdmin && hasBeenSaved && (
+        {!isSpectator && hasBeenSaved && (
           <div className={styles.clearRow}>
             <button className={styles.clearBtn} onClick={clearScore} disabled={saving}>Clear Score</button>
           </div>
