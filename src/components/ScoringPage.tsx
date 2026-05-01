@@ -367,7 +367,6 @@ export function ScoringPage() {
 
 function LoginPage() {
   const { login } = useAuth()
-  const { addToast } = useToast()
   const [email, setEmail] = useState('')
   const [error, setError] = useState(false)
 
@@ -376,7 +375,7 @@ function LoginPage() {
     const trimmed = email.trim().toLowerCase()
     if (!trimmed) return
     if (login(trimmed)) {
-      addToast('Welcome!', 'success')
+      // logged in
     } else {
       setError(true)
       setTimeout(() => setError(false), 2000)
