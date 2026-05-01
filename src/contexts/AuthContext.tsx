@@ -139,6 +139,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsSpectator(false)
     setAdminActivated(false)
     deleteCookie(SESSION_COOKIE)
+    deleteCookie(SPECTATOR_COOKIE)
+    // Clean token from URL so it doesn't re-login
+    const hash = window.location.hash
+    if (hash.includes('?')) {
+      window.history.replaceState({}, '', window.location.pathname + hash.split('?')[0])
+    }
     deleteCookie(ADMIN_COOKIE)
     deleteCookie(SPECTATOR_COOKIE)
   }, [])
