@@ -73,13 +73,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Auto-login via URL param (?token=email or ?token=spectator_token)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search || window.location.hash.split('?')[1] || '')
-    const token = params.get('token')
-    if (token && !isSpectator) {
+    const processToken = () => {
+      const params = new URLSearchParams(window.location.search || window.location.hash.split('?')[1] || '')
+      const token = params.get('token')
+      if (!token) return
+
       const cleanUrl = () => {
-        const url = new URL(window.location.href)
-        url.searchParams.delete('token')
-        window.history.replaceState({}, '', url.toString())
+        // Handle both regular and hash-based URLs
+        const hash = window.location.hash
+        if (hash.includes('?')) {
+          const cleanHash = hash.split('?')[0]
+          window.history.replaceState({}, '', window.location.pathname + cleanHash)
+        } else {
+          const url = new URL(window.location.href)
+          url.searchParams.delete('token')
+          window.history.replaceState({}, '', url.toString())
+        }
       }
 
       if (isSpectatorToken(token)) {
@@ -99,7 +108,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
     }
-  }, [users, currentUser, isSpectator, findByEmail, isSpectatorToken])
+
+    processToken()
+    window.addEventListener('hashchange', processToken)
+    return () => window.removeEventListener('hashchange', processToken)
+  }, [users, currentUser, findByEmail, isSpectatorToken])
 
   const login = useCallback(
     (input: string) => {
