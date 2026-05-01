@@ -50,10 +50,10 @@
 }
 
 .legend {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
   justify-content: center;
-  gap: 6px 12px;
+  gap: 4px 16px;
   padding-top: 12px;
   font-size: 11px;
 }
