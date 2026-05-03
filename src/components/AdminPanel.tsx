@@ -3,6 +3,7 @@ import { useData } from '../contexts/DataContext'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
 import { createUser, updateUser, deleteUser, createTeam, updateTeam, deleteTeam, updateConfig } from '../lib/data-service'
+import { getStrokesOnHole, getNetScore, getPoints, getDoubleHole } from '../lib/scoring'
 import styles from './AdminPanel.module.css'
 
 function lastName(full: string): string {
@@ -12,7 +13,7 @@ function lastName(full: string): string {
 
 export function AdminPanel() {
   const { isAdmin } = useAuth()
-  const { config, users, teams, refresh } = useData()
+  const { config, users, teams, holes, scores, refresh } = useData()
   const { addToast } = useToast()
 
   // New player form
@@ -104,6 +105,53 @@ export function AdminPanel() {
     addToast('Invite link copied', 'success')
   }
 
+  const handleExportCSV = () => {
+    const doubleHole = getDoubleHole(holes)
+    const sortedHoles = [...holes].sort((a, b) => a.number - b.number)
+    const teamMap = new Map(teams.map(t => [t.id, t.name]))
+    const scoreMap = new Map(scores.map(s => [`${s.userId}-${s.holeNumber}`, s.grossScore]))
+
+    const header = 'Team,Player,Pops,Hole,Par,HCP,Designation,Strokes,Gross,Net,NetVsPar,Points'
+    const rows: string[] = []
+
+    const sortedUsers = [...users].filter(u => u.teamId).sort((a, b) => {
+      const ta = teamMap.get(a.teamId!) ?? ''
+      const tb = teamMap.get(b.teamId!) ?? ''
+      return ta.localeCompare(tb) || a.name.localeCompare(b.name)
+    })
+
+    for (const u of sortedUsers) {
+      const teamName = teamMap.get(u.teamId!) ?? ''
+      for (const h of sortedHoles) {
+        const strokes = getStrokesOnHole(u.pops, h.handicap)
+        const gross = scoreMap.get(`${u.id}-${h.number}`)
+        const isDouble = h.number === doubleHole
+        let net = '', netVsPar = '', pts = ''
+        if (gross !== undefined) {
+          const n = getNetScore(gross, h.par, strokes)
+          const p = getPoints(n, isDouble)
+          net = String(gross - strokes)
+          netVsPar = String(n)
+          pts = String(p)
+        }
+        rows.push([
+          teamName, u.name, u.pops, h.number, h.par, h.handicap,
+          h.designation ?? '', strokes,
+          gross ?? '', net, netVsPar, pts
+        ].join(','))
+      }
+    }
+
+    const csv = [header, ...rows].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'the2s-scores.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className={styles.container}>
       {/* Lock toggle */}
@@ -112,6 +160,7 @@ export function AdminPanel() {
           {config.poolLocked ? '🔒 Tournament Locked' : '🔓 Lock Tournament'}
         </button>
         {config.poolLocked && <p className={styles.lockNote}>Teams, players, and course are locked. Scores can still be entered.</p>}
+        <button className={styles.exportBtn} onClick={handleExportCSV}>Export CSV</button>
       </div>
 
       {/* Teams — disabled when locked */}
